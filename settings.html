@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="fa"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-on-surface":"#2c303b","error-container":"#93000a","surface-dim":"#0f131d","on-secondary-fixed":"#001f26","on-primary-fixed-variant":"#2f2ebe","on-tertiary":"#003824","on-primary-fixed":"#07006c","surface-container-high":"#262a35","on-secondary":"#003640","surface-container-lowest":"#0a0e18","tertiary-fixed":"#6ffbbe","on-error-container":"#ffdad6","tertiary-fixed-dim":"#4edea3","on-background":"#dfe2f1","background":"#0f131d","surface-variant":"#313540","primary-fixed":"#e1e0ff","surface-container-highest":"#313540","primary":"#c0c1ff","on-surface":"#dfe2f1","on-tertiary-container":"#000703","inverse-primary":"#494bd6","on-primary":"#1000a9","on-surface-variant":"#c7c4d7","on-secondary-fixed-variant":"#004e5c","secondary-fixed-dim":"#4cd7f6","secondary-container":"#03b5d3","on-error":"#690005","primary-fixed-dim":"#c0c1ff","secondary-fixed":"#acedff","on-tertiary-fixed-variant":"#005236","on-tertiary-fixed":"#002113","tertiary":"#4edea3","surface":"#0f131d","inverse-surface":"#dfe2f1","surface-bright":"#353944","outline-variant":"#464554","surface-container":"#1c1f2a","on-secondary-container":"#00424e","surface-tint":"#c0c1ff","outline":"#908fa0","secondary":"#4cd7f6","surface-container-low":"#171b26","error":"#ffb4ab","primary-container":"#8083ff","tertiary-container":"#00885d","on-primary-container":"#0d0096"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-2xl":"3rem","gutter":"1rem","gutter-desktop":"1.5rem","space-xl":"2rem","margin-tablet":"1.5rem","space-lg":"1.5rem","space-md":"1rem","space-2xs":"0.125rem","margin-desktop":"2rem","space-xs":"0.25rem","gutter-tablet":"1.25rem","margin":"1rem"},"fontFamily":{"title-sm":["Inter"],"title-lg":["Inter"],"body-lg":["Inter"],"label-lg":["JetBrains Mono"],"headline-md":["Space Grotesk"],"label-md":["JetBrains Mono"],"headline-lg":["Space Grotesk"],"headline-sm":["Space Grotesk"],"label-sm":["JetBrains Mono"],"body-sm":["Inter"],"title-md":["Inter"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Inter"],"display-xl":["Space Grotesk"],"display-xl-mobile":["Space Grotesk"]},"fontSize":{"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"title-lg":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"display-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"700"}],"display-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}};</script><link href="assets/overrides.css" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary min-h-screen"><aside class="fixed right-0 top-0 h-full w-72 bg-surface-container-low/90 backdrop-blur-xl z-50 flex flex-col justify-between py-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-md"><div class="px-space-lg py-space-sm flex items-center gap-space-sm"><img alt="OmniAI Neural Hub Logo" class="h-8 w-auto object-contain" src="assets/omniai-logo.svg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-tight">OmniAI</span><span class="font-label-sm text-label-sm text-on-surface-variant">هاب متمرکز هوش مصنوعی</span></div></div><div class="px-space-md"><div class="bg-surface-container-high/60 rounded-xl p-space-sm flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant">پروایدرهای فعال</span><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span></span></div><div class="grid grid-cols-2 gap-space-xs pt-space-xs"><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">ChatGPT</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">DeepSeek</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">Gemini</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary-fixed-dim"></span><span class="font-label-sm text-label-sm text-on-surface truncate">IbnSina</span></div></div></div></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary-container font-title-sm shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="chat-hub" href="index.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">forum</span><span class="font-title-sm text-title-sm">چت و گفتگو</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="account-connections" href="connections.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">hub</span><span class="font-title-sm text-title-sm">مدیریت اتصالات و اکانت‌ها</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl transition-all group bg-primary-container text-on-primary-container font-title-sm shadow-sm" data-omniai-nav="1" data-path="theme-language-settings" href="settings.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">palette</span><span class="font-title-sm text-title-sm">تنظیمات و شخصی‌سازی تم</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="token-quota-analytics" href="history.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">pie_chart</span><span class="font-title-sm text-title-sm">آمار مصرف و منابع حساب</span></a></nav></div><div class="px-space-md flex flex-col gap-space-sm"><div class="p-space-sm rounded-xl bg-surface-container/60 backdrop-blur flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary text-[18px]">cloud_done</span><span class="font-label-sm text-label-sm text-on-surface-variant">همگام‌سازی ابری</span></div><span class="font-label-sm text-label-sm text-tertiary px-1.5 py-0.5 rounded bg-tertiary-container/30">فعال</span></div><div class="flex items-center justify-between pt-space-xs px-space-xs"><button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">translate</span><span class="font-label-sm text-label-sm">FA / EN</span></button><button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">help</span><span class="font-label-sm text-label-sm">پشتیبانی</span></button></div></div></aside><div class="pr-72"><header class="fixed top-0 right-72 left-0 h-16 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-full"><span class="material-symbols-outlined text-[16px] text-primary">auto_mode</span><span class="font-label-sm text-label-sm text-on-surface">تم فعال: مدرن دیفالت</span></div><div class="hidden md:flex items-center gap-space-xs bg-surface-container-high/40 px-space-sm py-1 rounded-lg"><span class="material-symbols-outlined text-[16px] text-secondary">shield_with_heart</span><span class="font-label-sm text-label-sm text-on-surface-variant">IbnSina 1.5B آماده پاسخ‌گویی</span></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary-container ring-2 ring-surface"></span></button><div class="h-6 w-[1px] bg-surface-container-highest"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface text-right">امیررضا علوی</span><span class="font-label-sm text-label-sm text-on-surface-variant text-right">اکانت متصل: Pro</span></div><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXo1co9k26VN-VowBprgdLIwtvwCODEC9nIGLHrz8mLem8tcpPyQrJH8eX0VSWAVAXXCiW4fu5upr5ZEHTZIH7Y-s3bY5Hz_SRAkBuFRmrS_2JomMuREd0AEo4b7o8hIfm_xjFF3MZ6ywHuHzBfdMbLCGQpkLu5okp5UTs67Tr-5Q-WhHFJ9_XeG92TVXCjf6u_eBojIKqD4p-WJIol2qmgRrX8wLX8LlhzXn8_Umn2wXdgxH2d-fc"/><span class="absolute bottom-0 left-0 h-2.5 w-2.5 rounded-full bg-tertiary ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-8"><div class="flex flex-col w-full pb-space-2xl gap-space-xl">
+<!-- Top Highlight Section: Interactive Stage Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-space-lg shadow-xl">
+<div class="absolute -left-12 -top-12 h-64 w-64 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+<div class="absolute right-1/3 -bottom-16 h-48 w-48 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container/30 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">brush</span>
+            شخصی‌سازی همه‌جانبه
+          </span>
+<span class="text-outline text-label-sm font-label-sm">/ نسخه ۴.۲ هسته سیناپسی</span>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface tracking-tight">
+          تنظیمات ظاهر، زبان و ترجیحات همگام‌سازی
+        </p>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          تمامی پوسته‌ها به صورت بلادرنگ به لایه‌های عصبی چت، ابزارهای تحلیلی و داشبورد اکانت‌ها اعمال می‌شوند.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-high text-on-surface font-title-sm text-title-sm hover:bg-surface-bright transition-all shadow-sm" id="resetDefaultsBtn">
+<span class="material-symbols-outlined text-[18px]">history</span>
+          بازنشانی پیش‌فرض
+        </button>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-title-sm text-title-sm hover:opacity-90 transition-all shadow-lg" id="applyGlobalThemeBtn">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+          اعمال روی تمام صفحات
+        </button>
+</div>
+</div>
+</div>
+<!-- Main Bento Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- Right Panel (Persian First): Theme Selectors (8 cols on XL) -->
+<div class="xl:col-span-8 flex flex-col gap-space-lg">
+<!-- Section Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[24px]">palette</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">انتخاب قالب و تم بصری سامانه</h2>
+</div>
+<span class="font-label-md text-label-md text-secondary px-2.5 py-1 rounded-full bg-secondary/10">۴ استایل موتور رندرینگ</span>
+</div>
+<!-- Theme Cards Grid (2x2) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Theme 1: Cute Cat Theme -->
+<div class="theme-card relative group cursor-pointer overflow-hidden rounded-xl bg-surface-container-low p-space-md shadow-md transition-all hover:scale-[1.01] hover:bg-surface-container" data-theme="cat">
+<div class="absolute inset-0 bg-gradient-to-br from-[#fbcfe8]/15 via-transparent to-[#e9d5ff]/10 opacity-70 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#f472b6] to-[#ec4899] flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[24px]">pets</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface flex items-center gap-1.5">
+                    تم گربه‌ای
+                    <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary">Cute Cat 🐾</span>
+</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">پاستلی صورتی و بنفش با پنجه‌های ناز</p>
+</div>
+</div>
+<span class="theme-check-icon hidden h-6 w-6 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<!-- Visual Preview Canvas within card -->
+<div class="rounded-lg p-space-sm bg-surface-container-lowest/80 backdrop-blur flex flex-col gap-2 overflow-hidden relative">
+<div class="flex items-center justify-between text-[11px] font-label-sm">
+<span class="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">favorite</span> Meow Engine
+                </span>
+<span class="text-on-surface-variant font-label-sm">Bubble v2.4</span>
+</div>
+<!-- Mini Cat Chat Mock -->
+<div class="flex gap-2 items-center">
+<div class="w-6 h-6 rounded-full bg-pink-400 flex items-center justify-center text-[11px] text-white">🐾</div>
+<div class="rounded-xl px-3 py-1.5 bg-pink-950/40 text-pink-100 font-body-sm text-body-sm rounded-tr-none">
+                  میو! همه پیام‌ها ذخیره شدند سرپرست من! 🐱
+                </div>
+</div>
+<div class="flex items-center justify-end gap-1 text-[10px] text-pink-300/70 font-label-sm">
+<span>پنجه‌های شنی فعال</span>
+<span class="material-symbols-outlined text-[12px]">auto_awesome</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              تمام صفحات پر از استیکرهای کیوت گربه‌ای، تم پاستلی صورتی و بنفش، رد پای پنجه در پس‌زمینه و المان‌های بازیگوشانه گفتگو.
+            </p>
+<button class="w-full py-2 px-space-sm rounded-lg bg-surface-container-high hover:bg-pink-600 hover:text-white text-on-surface font-label-md text-label-md transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">preview</span>
+              پیش‌نمایش زنده استایل گربه
+            </button>
+</div>
+</div>
+<!-- Theme 2: Cyberpunk Neon -->
+<div class="theme-card relative group cursor-pointer overflow-hidden rounded-xl bg-surface-container-low p-space-md shadow-md transition-all hover:scale-[1.01] hover:bg-surface-container" data-theme="cyberpunk">
+<div class="absolute inset-0 bg-gradient-to-br from-[#06b6d4]/15 via-transparent to-[#f43f5e]/15 opacity-70 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0284c7] to-[#06b6d4] flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[24px]">bolt</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface flex items-center gap-1.5">
+                    سایبرپانک نئون
+                    <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary">Cyberpunk ⚡</span>
+</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">سیانوآبی فسفری، خطوط ماتریکس و هاد</p>
+</div>
+</div>
+<span class="theme-check-icon hidden h-6 w-6 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<!-- Visual Preview Canvas within card -->
+<div class="rounded-lg p-space-sm bg-surface-container-lowest/90 backdrop-blur flex flex-col gap-2 overflow-hidden relative font-label-sm">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-cyan-400 flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping"></span> HUD.STREAM // 84.1%
+                </span>
+<span class="text-fuchsia-400 font-label-sm">OVERCLOCK</span>
+</div>
+<!-- Cyberpunk HUD Bar -->
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-l from-cyan-400 to-fuchsia-500 w-3/4"></div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-on-surface-variant">
+<span>NEURAL_THREAD: 0x9AF</span>
+<span class="text-cyan-300">GLITCH_FILTER: ON</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              فضای آینده‌نگرانه نئونی، خطوط براق سیانوآبی و صورتی فسفری، تم تاریک ماتریسی و انیمیشن‌های های‌تک هولوگرافیک.
+            </p>
+<button class="w-full py-2 px-space-sm rounded-lg bg-surface-container-high hover:bg-cyan-600 hover:text-white text-on-surface font-label-md text-label-md transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">preview</span>
+              پیش‌نمایش زنده سایبرپانک
+            </button>
+</div>
+</div>
+<!-- Theme 3: Retro 90s OS -->
+<div class="theme-card relative group cursor-pointer overflow-hidden rounded-xl bg-surface-container-low p-space-md shadow-md transition-all hover:scale-[1.01] hover:bg-surface-container" data-theme="retro">
+<div class="absolute inset-0 bg-gradient-to-br from-[#94a3b8]/10 via-transparent to-[#64748b]/10 opacity-70 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#475569] to-[#94a3b8] flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-[24px]">save</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface flex items-center gap-1.5">
+                    رترو دهه ۱۹۹۰
+                    <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary">Retro 90s 💾</span>
+</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">ویندوز کلاسیک، دکمه‌های برجسته و فلاپی</p>
+</div>
+</div>
+<span class="theme-check-icon hidden h-6 w-6 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<!-- Visual Preview Canvas within card -->
+<div class="rounded-lg p-space-xs bg-slate-300 text-slate-900 shadow-inner flex flex-col gap-1.5 overflow-hidden font-label-sm">
+<div class="bg-blue-900 text-white px-2 py-0.5 flex items-center justify-between text-[11px]">
+<div class="flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[12px]">desktop_windows</span> C:\OMNI_AI.EXE
+                </div>
+<div class="flex items-center gap-1">
+<span class="px-1 bg-slate-300 text-black text-[9px] font-bold">_</span>
+<span class="px-1 bg-slate-300 text-black text-[9px] font-bold">X</span>
+</div>
+</div>
+<div class="bg-white p-1.5 text-[11px] text-slate-800 leading-snug">
+                سیستم با درایو فلاپی همگام شد. ۳۲ مگابایت رم در دسترس است.
+              </div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              حس و حال سیستم‌عامل‌های کلاسیک دهه ۹۰، فونت‌های پیکسلی، پنجره‌های خاکستری با شادوهای برجسته و نوار وظیفه رترو.
+            </p>
+<button class="w-full py-2 px-space-sm rounded-lg bg-surface-container-high hover:bg-slate-500 hover:text-white text-on-surface font-label-md text-label-md transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">preview</span>
+              پیش‌نمایش زنده نوستالژی ۹۰
+            </button>
+</div>
+</div>
+<!-- Theme 4: Modern Default (Current Active) -->
+<div class="theme-card active-theme relative group cursor-pointer overflow-hidden rounded-xl bg-surface-container p-space-md shadow-md transition-all hover:scale-[1.01]" data-theme="modern">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-secondary/15 opacity-70 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col h-full justify-between gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-inverse-primary to-primary flex items-center justify-center text-on-primary shadow-md">
+<span class="material-symbols-outlined text-[24px]">view_in_ar</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface flex items-center gap-1.5">
+                    مدرن نیورال هاب
+                    <span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-medium">فعال کنونی ✓</span>
+</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">دارک گلس، ایندیگو و شفافیت فوق‌العاده</p>
+</div>
+</div>
+<span class="theme-check-icon h-6 w-6 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<!-- Visual Preview Canvas within card -->
+<div class="rounded-lg p-space-sm bg-surface-container-lowest/80 backdrop-blur flex flex-col gap-2 overflow-hidden relative">
+<div class="flex items-center justify-between text-[11px] font-label-sm">
+<span class="text-primary flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span> Neural Engine Active
+                </span>
+<span class="text-secondary font-label-sm">IbnSina 1.5B</span>
+</div>
+<div class="flex gap-2 items-center">
+<div class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+</div>
+<div class="rounded-xl px-3 py-1.5 bg-surface-container-high text-on-surface font-body-sm text-body-sm rounded-tr-none">
+                  پردازش ابری به صورت موازی با تأخیر ۲۴ میلی‌ثانیه.
+                </div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              معماری مدرن فیوچریستیک با شیشه‌های مات، پالت سایه ایندیگو عمیق و بیشترین وضوح در چت‌های چندعاملی و کدنویسی.
+            </p>
+<button class="w-full py-2 px-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+              تم پیش‌فرض سامانه
+            </button>
+</div>
+</div>
+</div>
+<!-- Theme Custom Accent & Density Controller -->
+<div class="bg-surface-container rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+<h4 class="font-title-md text-title-md text-on-surface">تنظیمات فرعی تم و تراکم بصری</h4>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Dynamic Surface Variables</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Glassmorphism Blur Slider -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface">میزان ماتی شیشه (Blur)</span>
+<span class="font-label-sm text-label-sm text-primary" id="blurVal">24px</span>
+</div>
+<input class="accent-primary cursor-pointer w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none" id="blurSlider" max="40" min="4" type="range" value="24"/>
+</div>
+<!-- Glow Intensity -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface">شدت درخشش نئونی (Glow)</span>
+<span class="font-label-sm text-label-sm text-secondary" id="glowVal">75%</span>
+</div>
+<input class="accent-secondary cursor-pointer w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none" id="glowSlider" max="100" min="10" type="range" value="75"/>
+</div>
+<!-- UI Density -->
+<div class="flex flex-col gap-space-xs bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface">تراکم فاصله‌ها (Density)</span>
+<span class="font-label-sm text-label-sm text-tertiary">استاندارد (۸pt)</span>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<button class="flex-1 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright">متراکم</button>
+<button class="flex-1 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm">نرمال</button>
+<button class="flex-1 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright">راحت</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Left Panel: Language & Regional Settings + Chat Preferences (4 cols on XL) -->
+<div class="xl:col-span-4 flex flex-col gap-space-lg">
+<!-- Language Box -->
+<div class="bg-surface-container rounded-xl p-space-md flex flex-col gap-space-md shadow-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]">language</span>
+<h3 class="font-title-md text-title-md text-on-surface">تغییر زبان سامانه</h3>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary bg-tertiary-container/20 px-2 py-0.5 rounded">RTL Ready</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          جهت نگارش و کلیه اصطلاحات فنی به صورت یکپارچه تغییر می‌کنند.
+        </p>
+<!-- Segmented Glass Language Switcher -->
+<div class="grid grid-cols-2 p-1 rounded-xl bg-surface-container-lowest gap-1">
+<button class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm shadow-sm transition-all" id="langFaBtn">
+<span class="material-symbols-outlined text-[18px]">format_textdirection_r_to_l</span>
+<span>فارسی (پیش‌فرض)</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-all" id="langEnBtn">
+<span class="material-symbols-outlined text-[18px]">format_textdirection_l_to_r</span>
+<span>English (LTR)</span>
+</button>
+</div>
+<!-- Regional Numbers & Calendar Settings -->
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">اعداد و ارقام فارسی (۱۲۳)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">تبدیل ارقام انگلیسی توکن‌ها به فارسی</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">فرمت تقویم خورشیدی</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">نمایش تاریخ هجری شمسی به جای میلادی</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Chat & Sync Preferences Card -->
+<div class="bg-surface-container rounded-xl p-space-md flex flex-col gap-space-md shadow-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">sync_saved_locally</span>
+<h3 class="font-title-md text-title-md text-on-surface">ترجیحات چت، نشست‌ها و همگام‌سازی</h3>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[18px]">verified_user</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Preference 1 -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high/60 transition-colors">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">mark_email_read</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">حفظ مداوم سشن جیمیل و یاهو</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">جلوگیری از انقضای توکن در اتصالات OAuth</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Preference 2 -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high/60 transition-colors">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary text-[20px]">cloud_sync</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">ذخیره خودکار در اکانت اصلی</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">انتقال پرامپت‌ها به تاریخچه رسمی ChatGPT و Gemini</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Preference 3 -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high/60 transition-colors">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary-container text-[20px]">speed</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">نمایش زنده استریم پاسخ (Fast Typing)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">رندر کلمه به کلمه با شبیه‌سازی ۲۵ توکن بر ثانیه</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Preference 4 -->
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container-high/60 transition-colors">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">lock</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">رمزگذاری محلی تاریخچه (AES-256)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ذخیره امن پیام‌ها فقط روی حافظه مرورگر کاربر</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Live Playground Section: Experience the Theme -->
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-xs">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">smart_toy</span>
+          پلی‌گراند زنده تست پوسته (Interactive UI Playground)
+        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          روی گزینه‌های زیر کلیک کنید تا رفتار بصری حباب پیام‌ها، نشان‌ها و دکمه‌ها را بلافاصله در پوسته انتخابی مشاهده نمایید.
+        </p>
+</div>
+<!-- Quick Selector Pills -->
+<div class="flex items-center gap-1.5 p-1 rounded-xl bg-surface-container-high self-start md:self-auto">
+<button class="playground-tab active-tab px-3 py-1.5 rounded-lg text-label-md font-label-md bg-primary text-on-primary transition-all" id="pillPlaygroundModern">مدرن دیفالت</button>
+<button class="playground-tab px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all" id="pillPlaygroundCat">گربه‌ای (Cute Cat 🐱)</button>
+<button class="playground-tab px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all" id="pillPlaygroundCyber">سایبرپانک (Cyberpunk ⚡)</button>
+<button class="playground-tab px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all" id="pillPlaygroundRetro">رترو دهه ۹۰ (Retro 💾)</button>
+</div>
+</div>
+<!-- Playground Display Stage -->
+<div class="stage-modern rounded-xl p-space-lg shadow-xl relative overflow-hidden transition-all duration-300" id="livePlaygroundStage">
+<!-- Ambient background decorations that react to themes -->
+<div class="absolute inset-0 pointer-events-none transition-all duration-500 bg-gradient-to-br from-surface-container via-surface-container-low to-surface-container-lowest" id="playgroundBackgroundLayer"></div>
+<!-- Stage Inner Content -->
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+<!-- Left Sub-Stage: Mock Chat Interface (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- Mock Model Header -->
+<div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-highest/60 backdrop-blur transition-all" id="mockHeader">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold" id="mockAvatar">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface" id="mockTitle">IbnSina 1.5B (فارسی-مدیکال)</span>
+<span class="font-label-sm text-label-sm text-tertiary" id="mockSub">وضعیت: متصل به پروتکل هوشمند • تأخیر: ۱۸ms</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-primary/20 text-primary" id="mockBadge">Context: 128k</span>
+<button class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">share</span></button>
+</div>
+</div>
+<!-- Chat Conversation Area -->
+<div class="flex flex-col gap-space-sm py-space-xs">
+<!-- User Message -->
+<div class="flex justify-start">
+<div class="max-w-[80%] rounded-2xl rounded-tr-none p-space-md bg-surface-container-high text-on-surface shadow-md transition-all" id="userBubble">
+<p class="font-body-md text-body-md leading-relaxed">
+                  چگونه می‌توانم تنظیمات تم و ساختار زبانی را ذخیره کرده و روی همه مدل‌های ChatGPT و DeepSeek همزمان اعمال کنم؟
+                </p>
+<div class="flex items-center justify-end gap-1 mt-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>۱۰:۴۲ ق.ظ</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">done_all</span>
+</div>
+</div>
+</div>
+<!-- Agent Response -->
+<div class="flex justify-end">
+<div class="max-w-[85%] rounded-2xl rounded-tl-none p-space-md bg-gradient-to-br from-primary-container/20 via-surface-container to-surface-container-high text-on-surface shadow-md transition-all" id="agentBubble">
+<div class="flex items-center justify-between pb-1 text-primary font-label-sm text-label-sm">
+<span class="flex items-center gap-1" id="agentLabel">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span> پاسخ سنتز شده سیناپسی
+                  </span>
+<span class="font-label-sm text-label-sm opacity-70">28 tok/s</span>
+</div>
+<p class="font-body-md text-body-md leading-relaxed pt-1" id="agentBodyText">
+                  سامانه OmniAI کلیه تنظیمات رنگی، ماتی و زبان شما را درون هسته رندرینگ هماهنگ می‌سازد. به محض ذخیره، همه پنجره‌های همزمان، پیام‌های وب‌سوکت و نوارهای وضعیت مدل‌ها به قالب انتخاب‌شده تغییر می‌یابند!
+                </p>
+<!-- Action Bar Inside Agent Bubble -->
+<div class="flex items-center justify-between pt-space-sm mt-space-xs" id="agentFooter">
+<div class="flex items-center gap-2">
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="agentThemeStamp">تم: مدرن دیفالت</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mock Prompt Composer Input Area -->
+<div class="flex items-center gap-space-sm p-space-xs rounded-xl bg-surface-container-lowest/80 backdrop-blur transition-all" id="mockComposer">
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none px-space-xs" placeholder="پرامپت یا دستور خود را بنویسید..." type="text"/>
+<button class="px-space-md py-2 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm flex items-center gap-1 shadow-md hover:opacity-95 transition-all" id="mockSendBtn">
+<span>ارسال</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+<!-- Right Sub-Stage: Visual Feature Highlights (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-sm bg-surface-container-high/40 p-space-md rounded-xl backdrop-blur">
+<h4 class="font-title-md text-title-md text-on-surface flex items-center gap-1.5" id="themeInfoTitle">
+<span class="material-symbols-outlined text-primary">auto_mode</span> مشخصات فنی پوسته فعال
+          </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" id="themeInfoDesc">
+            طراحی استاندارد شرکت بر پایه شیشه تیره و کنتراست ارگونومیک، بالاترین خوانایی را در کاربری طولانی‌مدت به ارمغان می‌آورد.
+          </p>
+<div class="flex flex-col gap-2 pt-2">
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">کنتراست فونت متن:</span>
+<span class="text-tertiary" id="contrastMetric">AAA (14.2:1)</span>
+</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">آیکون‌های تزئینی:</span>
+<span class="text-on-surface" id="iconStyleMetric">Material Minimal</span>
+</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">انیمیشن حباب‌ها:</span>
+<span class="text-secondary" id="animMetric">Spring 200ms</span>
+</div>
+</div>
+<div class="pt-space-xs">
+<button class="w-full py-2.5 px-space-sm rounded-lg bg-surface-container text-on-surface hover:bg-surface-bright font-title-sm text-title-sm transition-all shadow-sm flex items-center justify-center gap-2" id="activateThisThemeNow">
+<span class="material-symbols-outlined text-[18px]">brush</span>
+              گزینش این پوسته برای کل کاربری
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Client-side Interactive Behavior -->
+<script>
+    (function() {
+      // Elements
+      const themeCards = document.querySelectorAll('.theme-card');
+      const stage = document.getElementById('livePlaygroundStage');
+      const bgLayer = document.getElementById('playgroundBackgroundLayer');
+      const mockAvatar = document.getElementById('mockAvatar');
+      const mockTitle = document.getElementById('mockTitle');
+      const mockSub = document.getElementById('mockSub');
+      const mockBadge = document.getElementById('mockBadge');
+      const userBubble = document.getElementById('userBubble');
+      const agentBubble = document.getElementById('agentBubble');
+      const agentLabel = document.getElementById('agentLabel');
+      const agentBodyText = document.getElementById('agentBodyText');
+      const agentThemeStamp = document.getElementById('agentThemeStamp');
+      const mockSendBtn = document.getElementById('mockSendBtn');
+      const themeInfoTitle = document.getElementById('themeInfoTitle');
+      const themeInfoDesc = document.getElementById('themeInfoDesc');
+      const contrastMetric = document.getElementById('contrastMetric');
+      const iconStyleMetric = document.getElementById('iconStyleMetric');
+      const animMetric = document.getElementById('animMetric');
+      const blurSlider = document.getElementById('blurSlider');
+      const blurVal = document.getElementById('blurVal');
+      const glowSlider = document.getElementById('glowSlider');
+      const glowVal = document.getElementById('glowVal');
+
+      const tabs = {
+        modern: document.getElementById('pillPlaygroundModern'),
+        cat: document.getElementById('pillPlaygroundCat'),
+        cyberpunk: document.getElementById('pillPlaygroundCyber'),
+        retro: document.getElementById('pillPlaygroundRetro')
+      };
+
+      // Theme Specs
+      const themes = {
+        modern: {
+          name: 'مدرن دیفالت (Modern Slate)',
+          desc: 'طراحی استاندارد بر پایه شیشه تیره و کنتراست ارگونومیک با رنگ‌مایه ایندیگو و شفافیت فوق‌العاده.',
+          contrast: 'AAA (14.2:1)',
+          icons: 'Material Minimal',
+          anim: 'Spring 200ms',
+          apply: () => {
+            bgLayer.className = 'absolute inset-0 pointer-events-none transition-all duration-500 bg-gradient-to-br from-[#0f131d] via-[#171b26] to-[#0a0e18]';
+            mockAvatar.className = 'w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold shadow-md';
+            mockAvatar.innerHTML = '<span class="material-symbols-outlined text-[18px]">psychology</span>';
+            mockTitle.textContent = 'IbnSina 1.5B (فارسی-مدیکال)';
+            mockSub.textContent = 'وضعیت: متصل به پروتکل هوشمند • تأخیر: ۱۸ms';
+            mockBadge.className = 'px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-primary/20 text-primary';
+            mockBadge.textContent = 'Context: 128k';
+
+            userBubble.className = 'max-w-[80%] rounded-2xl rounded-tr-none p-space-md bg-surface-container-high text-on-surface shadow-md transition-all';
+            agentBubble.className = 'max-w-[85%] rounded-2xl rounded-tl-none p-space-md bg-gradient-to-br from-primary-container/20 via-surface-container to-surface-container-high text-on-surface shadow-md transition-all';
+            agentLabel.innerHTML = '<span class="material-symbols-outlined text-[14px]">auto_awesome</span> پاسخ سنتز شده سیناپسی';
+            agentLabel.className = 'flex items-center gap-1 text-primary';
+            agentBodyText.textContent = 'سامانه OmniAI کلیه تنظیمات رنگی، ماتی و زبان شما را درون هسته رندرینگ هماهنگ می‌سازد. به محض ذخیره، همه پنجره‌های همزمان، پیام‌های وب‌سوکت و نوارهای وضعیت مدل‌ها به قالب انتخاب‌شده تغییر می‌یابند!';
+            agentThemeStamp.textContent = 'تم: مدرن دیفالت';
+            mockSendBtn.className = 'px-space-md py-2 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm flex items-center gap-1 shadow-md hover:opacity-95 transition-all';
+          }
+        },
+        cat: {
+          name: 'تم گربه‌ای (Cute Cat 🐾)',
+          desc: 'استیکرهای بامزه، حباب‌های صورتی و پاستلی، نشان‌های پنجه‌دار و انیمیشن‌های نرم و بازیگوش.',
+          contrast: 'AA+ (8.9:1)',
+          icons: 'Cat Paws & Hearts 🐾',
+          anim: 'Bouncy Jiggle 320ms',
+          apply: () => {
+            bgLayer.className = 'absolute inset-0 pointer-events-none transition-all duration-500 bg-gradient-to-br from-[#2a1226] via-[#3a1d35] to-[#1e0d1b]';
+            mockAvatar.className = 'w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center font-bold shadow-lg ring-2 ring-pink-300/40';
+            mockAvatar.innerHTML = '<span class="text-[16px]">🐾</span>';
+            mockTitle.textContent = 'IbnSina Paws Edition 🐱';
+            mockSub.textContent = 'خرخر آرام... • آماده پاسخ با استیکر';
+            mockBadge.className = 'px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-pink-500/30 text-pink-200 border border-pink-400/30';
+            mockBadge.textContent = 'Meow: 99.9%';
+
+            userBubble.className = 'max-w-[80%] rounded-3xl rounded-tr-none p-space-md bg-pink-950/60 text-pink-100 shadow-lg border border-pink-500/20 transition-all';
+            agentBubble.className = 'max-w-[85%] rounded-3xl rounded-tl-none p-space-md bg-gradient-to-br from-pink-900/60 via-purple-950/50 to-pink-950/70 text-pink-50 shadow-xl border border-pink-400/30 transition-all';
+            agentLabel.innerHTML = '<span class="text-[14px]">🌸</span> پاسخ کیوت گربه‌ای برای شما سرپرست عزیز';
+            agentLabel.className = 'flex items-center gap-1 text-pink-300 font-bold';
+            agentBodyText.textContent = 'میووو! پرامپت شما را با دقت پنجه کشیدم و ذخیره کردم! همه رنگ‌های پاستلی و حباب‌های نرم در تمام صفحات چت و هاب اکانت‌ها پخش شدند! ✨🐾';
+            agentThemeStamp.textContent = 'تم: کیوت کت پاستلی 🐱';
+            mockSendBtn.className = 'px-space-md py-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-title-sm text-title-sm flex items-center gap-1 shadow-lg hover:opacity-95 transition-all';
+          }
+        },
+        cyberpunk: {
+          name: 'سایبرپانک نئون (Cyberpunk ⚡)',
+          desc: 'تاریکی عمیق ماتریسی، تابش خطوط نئونی سیانوآبی، المان‌های شبیه نمایشگر خلبان (HUD) و اورکلاک.',
+          contrast: 'AAA (16.8:1)',
+          icons: 'Neon HUD Glyphs ⚡',
+          anim: 'Glitch Sharp 90ms',
+          apply: () => {
+            bgLayer.className = 'absolute inset-0 pointer-events-none transition-all duration-500 bg-gradient-to-br from-[#020617] via-[#051329] to-[#010a14]';
+            mockAvatar.className = 'w-8 h-8 rounded-none bg-cyan-500 text-black flex items-center justify-center font-bold shadow-[0_0_12px_#06b6d4]';
+            mockAvatar.innerHTML = '<span class="material-symbols-outlined text-[18px]">bolt</span>';
+            mockTitle.textContent = 'CYBER_IBNSINA // CORE_01';
+            mockSub.textContent = 'PORT: 8080 // SYNC: 100% // NOISE: LOW';
+            mockBadge.className = 'px-2.5 py-0.5 rounded-none text-label-sm font-label-sm bg-cyan-950 text-cyan-300 border border-cyan-400';
+            mockBadge.textContent = 'OVERCLOCK: 4.8GHz';
+
+            userBubble.className = 'max-w-[80%] rounded-none p-space-md bg-slate-900 text-cyan-200 shadow-2xl border-r-2 border-cyan-400 transition-all font-mono';
+            agentBubble.className = 'max-w-[85%] rounded-none p-space-md bg-[#04111d] text-cyan-50 shadow-[0_0_20px_rgba(6,182,212,0.15)] border-l-2 border-fuchsia-500 transition-all font-mono';
+            agentLabel.innerHTML = '<span class="material-symbols-outlined text-[14px]">terminal</span> [SYNTHESIZED NEURAL STREAM]';
+            agentLabel.className = 'flex items-center gap-1 text-cyan-400 font-bold';
+            agentBodyText.textContent = '>> PROMPT INJECTED. SYNAPSE STATUS: OK. GLITCH SUPPRESSION AT 99.4%. سیستم با پروتکل نئونی آماده اجرای عملیات متمرکز هوش‌های چندگانه است.';
+            agentThemeStamp.textContent = 'SYS_THEME: CYBER_NEON_v4';
+            mockSendBtn.className = 'px-space-md py-2 rounded-none bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-title-sm text-title-sm flex items-center gap-1 shadow-[0_0_15px_#06b6d4] transition-all font-bold';
+          }
+        },
+        retro: {
+          name: 'رترو دهه ۱۹۹۰ (Retro 90s OS 💾)',
+          desc: 'حس نوستالژیک ویندوز ۹۵/۹۸ با فونت‌های پیکسلی، حاشیه‌های برجسته ۳بعدی و حس دیسکت‌های فلاپی.',
+          contrast: 'Standard 90s Bevel',
+          icons: 'Classic Pixel 16-color',
+          anim: 'Instant (0ms)',
+          apply: () => {
+            bgLayer.className = 'absolute inset-0 pointer-events-none transition-all duration-500 bg-[#008080]';
+            mockAvatar.className = 'w-8 h-8 rounded-none bg-slate-300 text-black border-2 border-t-white border-l-white border-b-black border-r-black flex items-center justify-center font-bold shadow-none';
+            mockAvatar.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span>';
+            mockTitle.textContent = 'IbnSina.exe - Dial-up 56k';
+            mockSub.textContent = 'ComPort: COM1 • IRQ: 04 • SoundBlaster 16';
+            mockBadge.className = 'px-2 py-0.5 rounded-none text-label-sm font-label-sm bg-slate-300 text-black border-2 border-t-black border-l-black border-b-white border-r-white';
+            mockBadge.textContent = 'Floppy 1.44MB';
+
+            userBubble.className = 'max-w-[80%] rounded-none p-space-sm bg-slate-300 text-slate-900 border-2 border-t-white border-l-white border-b-slate-700 border-r-slate-700 shadow-none transition-all';
+            agentBubble.className = 'max-w-[85%] rounded-none p-space-sm bg-slate-200 text-slate-900 border-2 border-t-slate-700 border-l-slate-700 border-b-white border-r-white shadow-none transition-all';
+            agentLabel.innerHTML = '<span class="material-symbols-outlined text-[14px]">info</span> C:\\OMNI\\RESPONSE.TXT';
+            agentLabel.className = 'flex items-center gap-1 text-blue-900 font-bold';
+            agentBodyText.textContent = 'پرامپت شما با موفقیت در دایرکتوری سیستم ضبط شد. برای ذخیره بر روی دیسکت فلاپی دکمه OK را فشار دهید.';
+            agentThemeStamp.textContent = 'THEME: MS-DOS 6.22 / WIN95';
+            mockSendBtn.className = 'px-space-md py-1.5 rounded-none bg-slate-300 text-black border-2 border-t-white border-l-white border-b-black border-r-black font-title-sm text-title-sm flex items-center gap-1 active:border-t-black active:border-l-black active:border-b-white active:border-r-white';
+          }
+        }
+      };
+
+      function switchTheme(themeKey) {
+        if (!themes[themeKey]) return;
+        
+        // Update Playground Tab state
+        Object.keys(tabs).forEach(k => {
+          if (tabs[k]) {
+            if (k === themeKey) {
+              tabs[k].className = 'playground-tab active-tab px-3 py-1.5 rounded-lg text-label-md font-label-md bg-primary text-on-primary shadow-sm transition-all';
+            } else {
+              tabs[k].className = 'playground-tab px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-all';
+            }
+          }
+        });
+
+        // Update Theme Card selection checkmarks
+        themeCards.forEach(card => {
+          const cardKey = card.getAttribute('data-theme');
+          const checkIcon = card.querySelector('.theme-check-icon');
+          if (cardKey === themeKey) {
+            card.classList.add('ring-2', 'ring-primary');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+          } else {
+            card.classList.remove('ring-2', 'ring-primary');
+            if (checkIcon) checkIcon.classList.add('hidden');
+          }
+        });
+
+        // Apply theme specs
+        const t = themes[themeKey];
+        t.apply();
+        themeInfoTitle.innerHTML = '<span class="material-symbols-outlined text-primary">auto_mode</span> ' + t.name;
+        themeInfoDesc.textContent = t.desc;
+        contrastMetric.textContent = t.contrast;
+        iconStyleMetric.textContent = t.icons;
+        animMetric.textContent = t.anim;
+      }
+
+      // Event listeners for tabs
+      Object.keys(tabs).forEach(k => {
+        if (tabs[k]) {
+          tabs[k].addEventListener('click', () => switchTheme(k));
+        }
+      });
+
+      // Event listeners for theme cards
+      themeCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const key = card.getAttribute('data-theme');
+          switchTheme(key);
+        });
+      });
+
+      // Blur Slider
+      if (blurSlider && blurVal) {
+        blurSlider.addEventListener('input', (e) => {
+          blurVal.textContent = e.target.value + 'px';
+        });
+      }
+
+      // Glow Slider
+      if (glowSlider && glowVal) {
+        glowSlider.addEventListener('input', (e) => {
+          glowVal.textContent = e.target.value + '%';
+        });
+      }
+
+      // Language Switch Buttons
+      const langFaBtn = document.getElementById('langFaBtn');
+      const langEnBtn = document.getElementById('langEnBtn');
+      if (langFaBtn && langEnBtn) {
+        langFaBtn.addEventListener('click', () => {
+          langFaBtn.className = 'flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm shadow-sm transition-all';
+          langEnBtn.className = 'flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-all';
+        });
+        langEnBtn.addEventListener('click', () => {
+          langEnBtn.className = 'flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-primary text-on-primary font-title-sm text-title-sm shadow-sm transition-all';
+          langFaBtn.className = 'flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-on-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-all';
+        });
+      }
+
+      // Apply button micro-notification
+      const applyBtn = document.getElementById('applyGlobalThemeBtn');
+      if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+          const prevText = applyBtn.innerHTML;
+          applyBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">done</span> با موفقیت ذخیره شد!';
+          applyBtn.classList.replace('bg-primary', 'bg-tertiary');
+          applyBtn.classList.replace('text-on-primary', 'text-on-tertiary');
+          setTimeout(() => {
+            applyBtn.innerHTML = prevText;
+            applyBtn.classList.replace('bg-tertiary', 'bg-primary');
+            applyBtn.classList.replace('text-on-tertiary', 'text-on-primary');
+          }, 2000);
+        });
+      }
+
+      const activateThisBtn = document.getElementById('activateThisThemeNow');
+      if (activateThisBtn) {
+        activateThisBtn.addEventListener('click', () => {
+          if (applyBtn) applyBtn.click();
+        });
+      }
+
+    })();
+  </script>
+</div></main></div><script src="assets/app.js"></script></body></html>
