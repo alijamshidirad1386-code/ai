@@ -23,5 +23,15 @@ CREATE TABLE IF NOT EXISTS messages (
   metadata TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_conversations_user ON conversations(user_id, updated_at);
+CREATE TABLE IF NOT EXISTS provider_accounts (
+  provider_id TEXT PRIMARY KEY,
+  account_email TEXT,
+  label TEXT,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_conversation
+  ON messages(conversation_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_conversations_user
+  ON conversations(user_id, updated_at);
