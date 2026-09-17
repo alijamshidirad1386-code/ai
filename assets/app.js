@@ -1,251 +1,196 @@
-(function(){
-  'use strict';
-
-  const K={theme:'omniai_theme',lang:'omniai_lang',localMessages:'omniai_local_messages',conversation:'omniai_active_conversation',provider:'omniai_provider',ibnUrl:'omniai_ibnsina_url',authHint:'omniai_auth_hint'};
-  const PROVIDERS={
-    chatgpt:{label:'ChatGPT / OpenAI',model:'gpt-5'},
-    deepseek:{label:'DeepSeek',model:'deepseek-chat'},
-    gemini:{label:'Google Gemini',model:'gemini-2.5-flash'},
-    ibnsina:{label:'IbnSina-1.5B',model:'ibnsina-1.5b'}
-  };
-  const THEMES=['modern','cat','cyberpunk','retro'];
-
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const page=location.pathname.split('/').pop()||'index.html';
-
-  function safeJSON(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch{return fallback}}
-  function saveJSON(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch{}}
-  function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-  function nowLabel(){return new Intl.DateTimeFormat(document.documentElement.lang==='en'?'en-US':'fa-IR',{hour:'2-digit',minute:'2-digit'}).format(new Date())}
-  function toast(message){let t=$('#omniai-toast');if(!t){t=document.createElement('div');t.id='omniai-toast';t.className='omniai-toast';document.body.appendChild(t)}t.textContent=message;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2600)}
-
-  function applyTheme(theme){
-    theme=THEMES.includes(theme)?theme:'modern';
-    document.documentElement.dataset.omniTheme=theme;
-    document.body.dataset.omniTheme=theme;
-    localStorage.setItem(K.theme,theme);
-    $$('.theme-card').forEach(c=>c.classList.toggle('active-theme',c.dataset.theme===theme));
-    const label={modern:'مدرن',cat:'گربه‌ای',cyberpunk:'سایبرپانک',retro:'دهه ۱۹۹۰'}[theme]||theme;
-    $$('[data-active-theme-label]').forEach(e=>e.textContent=label);
-    updateThemeStat(label);
-    document.dispatchEvent(new CustomEvent('omniai:themechange',{detail:{theme}}));
+const copy = {
+  fa: {
+    privateWorkspace: 'فضای خصوصی', workspace: 'فضای کار', chat: 'گفت‌وگو', connections: 'اتصالات', customize: 'شخصی‌سازی', settings: 'تنظیمات', siteInfo: 'اطلاعات سایت', creatorRole: 'سازنده و طراح', encryptedNote: 'اعتبارنامه‌ها قبل از ذخیره‌سازی رمزنگاری می‌شوند.', breadcrumb: 'ALUNA / فضای کار', newConversation: 'گفت‌وگوی جدید', commandCenter: 'مرکز فرمان', chatHeadline: 'تمام هوش‌های تو، در یک فضای آرام.', chatSubheadline: 'بین مدل‌ها جابه‌جا شو بدون اینکه رشتهٔ فکرت را از دست بدهی. ALUNA فضای کارت را منظم و متمرکز نگه می‌دارد.', yourThreads: 'رشته‌های تو', conversations: 'گفت‌وگو', searchThreads: 'جست‌وجوی گفتگوها', ready: 'آماده', officialRoute: 'پیام‌ها از API رسمی سرویس‌دهنده عبور می‌کنند.', messagePlaceholder: 'هر چیزی می‌خواهی بپرس...', today: 'امروز', emptyThreads: 'هنوز گفت‌وگویی در ALUNA نساخته‌ای.', emptyMessages: 'این گفت‌وگو آمادهٔ شروع است.', connectToChat: 'برای شروع، ابتدا این مدل را از صفحهٔ اتصالات وصل کن.', goConnections: 'رفتن به اتصالات', you: 'تو', assistant: 'ALUNA', sending: 'در حال ارسال...', connectionRequired: 'برای گفتگو باید سرویس را وصل کنی.',
+    connectionsKicker: 'اتصالات تو', connectionsHeadline: 'مدل‌هایت را به ALUNA بیاور.', connectionsSubheadline: 'با API رسمی سرویس‌دهنده وصل شو. ایمیل فقط برچسب اتصال است؛ ALUNA هیچ‌وقت رمز حساب سرویس‌دهنده را نمی‌خواهد.', serverEncrypted: 'رمزنگاری سمت سرور', providerTruthTitle: 'مرز روشن بین حساب و API', providerTruth: 'ورود به سایت مصرف‌کنندهٔ یک هوش مصنوعی با Gmail، به یک سایت دیگر اجازهٔ خواندن تاریخچهٔ خصوصی آن را نمی‌دهد. برای اینکه چت واقعاً کار کند، کلید API رسمی همان سرویس را اینجا وارد کن. تاریخچهٔ ALUNA سپس واقعاً در D1 ذخیره می‌شود.', emailLabel: 'ایمیل حساب', apiKeyLabel: 'کلید API رسمی', emailPlaceholder: 'you@example.com', apiKeyPlaceholder: 'کلید فقط برای اتصال امن', connect: 'اتصال و بررسی کلید', disconnect: 'قطع اتصال', connected: 'متصل', notConnected: 'وصل نشده', verifyHint: 'کلید در مرورگر ذخیره نمی‌شود؛ Worker آن را رمزنگاری می‌کند.', providerOpenaiDesc: 'گفتگو با مدل‌های رسمی OpenAI از مسیر API.', providerDeepseekDesc: 'پاسخ‌های عمیق و سریع از API رسمی DeepSeek.', providerGeminiDesc: 'تجربهٔ Gemini با endpoint رسمی Google.',
+    settingsKicker: 'فضای تو', settingsHeadline: 'ALUNA را شبیه خودت کن.', settingsSubheadline: 'هر جزئیات در فضای کارت ذخیره می‌شود و در جلسه‌های بعدی برمی‌گردد.', lookAndFeel: 'ظاهر و حس', themes: 'تم‌ها', auroraTheme: 'آرورا', auroraThemeSub: 'پریمیوم و آرام', catTheme: 'باشگاه گربه‌ها', catThemeSub: 'نرم و بازیگوش', cyberTheme: 'نئون سایبر', cyberThemeSub: 'آیندهٔ الکتریکی', retroTheme: 'سیگنال دهه ۹۰', retroThemeSub: 'نوستالژی دیجیتال', accentKicker: 'تأکید', accentColor: 'رنگ اصلی', accentHint: 'در تمام فضای کار اعمال می‌شود', preferencesKicker: 'ترجیحات', preferences: 'ترجیحات', language: 'زبان رابط', languageSub: 'فارسی یا انگلیسی', saveHistory: 'ذخیرهٔ تاریخچه ALUNA', saveHistorySub: 'ذخیرهٔ گفتگوها در D1', alwaysOn: 'همیشه فعال', dataKicker: 'داده', dataControl: 'کنترل فضای کار', dataControlText: 'قطع اتصال، اعتبارنامهٔ رمزنگاری‌شده را از ALUNA حذف می‌کند. گفتگوهای ALUNA تا زمان حذف دستی باقی می‌مانند.', refreshData: 'به‌روزرسانی داده‌های فضا',
+    infoHeadline: 'راهی آگاهانه‌تر برای استفاده از هوش مصنوعی.', infoSubheadline: 'ALUNA برای کسانی ساخته شده که بیش از یک مدل استفاده می‌کنند، اما یک فضای روشن برای فکر کردن، ساختن و جلو رفتن می‌خواهند.', theMaker: 'سازنده', creatorBio: 'ALIRAHIMI سازنده‌ای محصول‌محور است که باور دارد ابزارهای قدرتمند باید آرام، انسانی و زیبا باشند. ALUNA پاسخ او به شلوغی دنیای هوش مصنوعی است: یک مرکز فرمان متمرکز که در آن هر مدل جای خودش را دارد، هر رشته حافظه دارد و هر تعامل با دقت طراحی شده است.', featureOneTitle: 'یک فضای واحد', featureOneText: 'با سه API رسمی از یک رابط پریمیوم گفتگو کن.', featureTwoTitle: 'ماندگاری واقعی', featureTwoText: 'رشته‌ها و پیام‌های ALUNA در Cloudflare D1 ذخیره می‌شوند، نه در یک آرایهٔ نمایشی.', featureThreeTitle: 'صادق از ابتدا', featureThreeText: 'محصول روشن می‌کند که اعتبارنامهٔ سرویس‌دهنده چه چیزی را باز می‌کند و چه چیزی را نه.', featureFourTitle: 'ساخته‌شده برای کنترل', featureFourText: 'اعتبارنامه‌های رمزنگاری‌شده، معماری شفاف و مسیر آماده برای حساب‌های کاربری تأییدشده.', craftedBy: 'ساخته‌شده توسط ALIRAHIMI برای فردایی متمرکزتر.', siteInfo: 'اطلاعات سایت', stateLoaded: 'فضای کار با موفقیت بارگذاری شد.', stateOffline: 'اتصال به Worker برقرار نشد. پروژه را با Wrangler اجرا کن.', saved: 'ذخیره شد', disconnected: 'اتصال قطع شد', connectedSuccess: 'اتصال با موفقیت بررسی و ذخیره شد.', loading: 'در حال بارگذاری...', noProvider: 'این مدل هنوز وصل نشده است.', providerError: 'پاسخ از سرویس‌دهنده دریافت نشد.'
+  },
+  en: {
+    privateWorkspace: 'Private workspace', workspace: 'Workspace', chat: 'Chat', connections: 'Connections', customize: 'Customize', settings: 'Settings', siteInfo: 'Site information', creatorRole: 'Creator & builder', encryptedNote: 'Credentials are encrypted before storage.', breadcrumb: 'ALUNA / Workspace', newConversation: 'New chat', commandCenter: 'COMMAND CENTER', chatHeadline: 'All your AI, in one calm place.', chatSubheadline: 'Switch between models without losing your thread. ALUNA keeps your workspace focused and your conversations beautifully organized.', yourThreads: 'YOUR THREADS', conversations: 'conversations', searchThreads: 'Search threads', ready: 'Ready', officialRoute: "Messages route through the provider's official API.", messagePlaceholder: 'Ask anything...', today: 'Today', emptyThreads: 'You have not created an ALUNA conversation yet.', emptyMessages: 'This conversation is ready to begin.', connectToChat: 'Connect this model from the Connections page to start.', goConnections: 'Open connections', you: 'You', assistant: 'ALUNA', sending: 'Sending...', connectionRequired: 'Connect this provider before chatting.',
+    connectionsKicker: 'YOUR CONNECTIONS', connectionsHeadline: 'Bring your models into ALUNA.', connectionsSubheadline: 'Connect with an official provider API. Your account email labels the connection; ALUNA never asks for your provider password.', serverEncrypted: 'Server-side encrypted', providerTruthTitle: 'A clear line between account and API', providerTruth: "Logging into a consumer AI website with Gmail does not give another website access to its private web history. To make chat genuinely work, use the provider's official API key here. ALUNA then stores its own real history in D1.", emailLabel: 'Account email', apiKeyLabel: 'Official API key', emailPlaceholder: 'you@example.com', apiKeyPlaceholder: 'Used only for secure connection', connect: 'Connect & verify key', disconnect: 'Disconnect', connected: 'Connected', notConnected: 'Not connected', verifyHint: 'The key is not stored in the browser; the Worker encrypts it.', providerOpenaiDesc: 'Chat with official OpenAI models through the API.', providerDeepseekDesc: 'Fast, thoughtful responses from DeepSeek API.', providerGeminiDesc: 'Gemini through Google’s official endpoint.',
+    settingsKicker: 'YOUR SPACE', settingsHeadline: 'Make ALUNA feel like yours.', settingsSubheadline: 'Every detail is saved to your workspace and follows you across sessions.', lookAndFeel: 'LOOK & FEEL', themes: 'Themes', auroraTheme: 'Aurora', auroraThemeSub: 'Quiet premium', catTheme: 'Cat club', catThemeSub: 'Soft & playful', cyberTheme: 'Cyber neon', cyberThemeSub: 'Electric future', retroTheme: '90s signal', retroThemeSub: 'Digital nostalgia', accentKicker: 'ACCENT', accentColor: 'Accent color', accentHint: 'Applied across the workspace', preferencesKicker: 'PREFERENCES', preferences: 'Preferences', language: 'Interface language', languageSub: 'Persian or English', saveHistory: 'Save ALUNA history', saveHistorySub: 'Persist conversations in D1', alwaysOn: 'Always on', dataKicker: 'DATA', dataControl: 'Workspace control', dataControlText: 'Disconnecting a provider removes its encrypted credential from ALUNA. Your saved ALUNA conversations stay available until you delete them.', refreshData: 'Refresh workspace data',
+    infoHeadline: 'A more intentional way to use AI.', infoSubheadline: 'ALUNA is built for people who use more than one model, but want one clear place to think, create, and move forward.', theMaker: 'THE MAKER', creatorBio: 'ALIRAHIMI is a product-minded creator who believes powerful tools should feel calm, human, and beautifully made. ALUNA is his answer to a noisy AI landscape: a focused command center where every model has a place, every thread has a memory, and every interaction feels considered.', featureOneTitle: 'One workspace', featureOneText: 'Chat with three official provider APIs from one premium interface.', featureTwoTitle: 'Real persistence', featureTwoText: 'Your ALUNA threads and messages are stored in Cloudflare D1, not a demo array.', featureThreeTitle: 'Honest by design', featureThreeText: 'The product explains what provider credentials can and cannot unlock.', featureFourTitle: 'Built for control', featureFourText: 'Encrypted credentials, a clean architecture, and a path to verified user accounts.', craftedBy: 'Crafted by ALIRAHIMI for a more focused tomorrow.', siteInfo: 'Site information', stateLoaded: 'Workspace loaded successfully.', stateOffline: 'The Worker is not reachable. Run the project with Wrangler.', saved: 'Saved', disconnected: 'Connection removed', connectedSuccess: 'Connection verified and saved.', loading: 'Loading...', noProvider: 'This model is not connected yet.', providerError: 'The provider did not return a response.'
   }
-  function updateThemeStat(label){const e=$('#active-theme-stat');if(e)e.textContent=label}
+};
 
-  const translations={
-    fa:{chat:'چت و گفتگو',connections:'مدیریت اتصالات و اکانت‌ها',settings:'تنظیمات و شخصی‌سازی تم',history:'تاریخچه گفتگوها',send:'ارسال',newChat:'گفتگوی تازه',connect:'اتصال',disconnected:'متصل نیست',configured:'پیکربندی‌شده',notConfigured:'نیازمند تنظیم Cloudflare'},
-    en:{chat:'Chat',connections:'Connections',settings:'Settings & Themes',history:'Conversation History',send:'Send',newChat:'New chat',connect:'Connect',disconnected:'Not connected',configured:'Configured',notConfigured:'Cloudflare setup required'}
-  };
-  const EN_MAP={
-    'چت و گفتگو':'Chat','مدیریت اتصالات و اکانت‌ها':'Connections','تنظیمات و شخصی‌سازی تم':'Settings & Themes','آمار مصرف و منابع حساب':'Usage & Sources','تاریخچه گفتگوها':'Conversation History','اتصالات':'Connections','تنظیمات':'Settings','ارسال':'Send','گفتگوی تازه':'New Chat','گفتگوی ابری تازه':'New Cloud Chat','تاریخچه گفتگوها':'Conversation History','متصل است':'Connected','در انتظار اتصال':'Awaiting connection','اتصال':'Connect','قطع اتصال':'Disconnect','همگام‌سازی':'Sync','همگام‌سازی زنده':'Live sync','همگام تاریخچه':'Sync history','تغییر جیمیل':'Change account','مدیریت سشن':'Session management','بازنشانی پیش‌فرض':'Reset defaults','زبان':'Language','ظاهر':'Appearance','تم فعال':'Active theme','گربه‌ای':'Cat','سایبرپانک':'Cyberpunk','دهه ۱۹۹۰':'1990s','مدرن':'Modern','پیام‌های ذخیره‌شده در این مرورگر':'Messages saved in this browser','پاک‌سازی تاریخچه محلی':'Clear local history','جستجو در عنوان یا پیام...':'Search title or message...','یک مدل را انتخاب کنید و گفت‌وگو را شروع کنید.':'Choose a model and start a conversation.','چت و گفتگو':'Chat','ذخیره':'Save','پشتیبانی':'Support','وب‌سرچ فعال':'Web search active','کپی':'Copy','تولید مجدد':'Regenerate','پاسخ با مدل دیگر':'Reply with another model','گفتگوهای اخیر':'Recent conversations','جستجو':'Search'};
-  function translateStatic(lang){
-    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(n=>{if(!n.parentElement)return;if(!n.parentElement.closest('script,style')){if(!n.dataset.omniaiFa)n.dataset.omniaiFa=n.nodeValue;const fa=n.dataset.omniaiFa.trim();if(lang==='en'&&EN_MAP[fa])n.nodeValue=n.nodeValue.replace(fa,EN_MAP[fa]);else if(lang==='fa')n.nodeValue=n.dataset.omniaiFa;}});
+const providers = {
+  openai: { name: 'ChatGPT', short: 'GPT', icon: '✺', descriptionKey: 'providerOpenaiDesc' },
+  deepseek: { name: 'DeepSeek', short: 'DS', icon: 'D', descriptionKey: 'providerDeepseekDesc' },
+  gemini: { name: 'Gemini', short: 'G', icon: '✦', descriptionKey: 'providerGeminiDesc' }
+};
+
+const state = { lang: 'fa', settings: { language: 'fa', theme: 'aurora', accent: '#8b5cf6' }, connections: [], conversations: [], provider: 'openai', conversationId: null, messages: [], search: '', online: true };
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+const t = (key) => copy[state.lang][key] || key;
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+const providerInfo = (provider) => providers[provider] || providers.openai;
+
+async function api(path, options = {}) {
+  const response = await fetch(`/api/${path}`, { credentials: 'same-origin', headers: { 'content-type': 'application/json', ...(options.headers || {}) }, ...options });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data?.error?.message || t('providerError'));
+  return data;
+}
+
+function toast(message) {
+  const node = $('#toast'); node.textContent = message; node.classList.add('show'); clearTimeout(toast.timer); toast.timer = setTimeout(() => node.classList.remove('show'), 3500);
+}
+
+function applyCopy() {
+  document.documentElement.lang = state.lang;
+  document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
+  $$('[data-i18n]').forEach((node) => { node.innerHTML = t(node.dataset.i18n); });
+  $$('[data-i18n-placeholder]').forEach((node) => { node.placeholder = t(node.dataset.i18nPlaceholder); });
+  $('#pageTitle').textContent = t(document.querySelector('.nav-item.active')?.dataset.page === 'info' ? 'siteInfo' : document.querySelector('.nav-item.active')?.dataset.page || 'chat');
+  $('#languageButton').innerHTML = state.lang === 'fa' ? 'FA <span>↔</span> EN' : 'EN <span>↔</span> FA';
+}
+
+function applySettings() {
+  document.body.dataset.theme = state.settings.theme || 'aurora';
+  document.documentElement.style.setProperty('--brand', state.settings.accent || '#8b5cf6');
+  document.documentElement.style.setProperty('--brand-soft', `${state.settings.accent || '#8b5cf6'}20`);
+  $$('.theme-tile').forEach((node) => node.classList.toggle('selected', node.dataset.theme === state.settings.theme));
+  $$('.accent').forEach((node) => node.classList.toggle('selected', node.dataset.accent === state.settings.accent));
+  $$('#languageSwitch button').forEach((node) => node.classList.toggle('active', node.dataset.lang === state.lang));
+}
+
+function connected(provider = state.provider) { return state.connections.some((item) => item.provider === provider); }
+
+function renderModels() {
+  $('#modelSwitcher').innerHTML = Object.entries(providers).map(([key, item]) => `<button class="model-chip ${key === state.provider ? 'active' : ''}" data-provider="${key}"><i class="${key}">${item.icon}</i>${item.name}</button>`).join('');
+  $$('.model-chip').forEach((node) => node.addEventListener('click', () => { state.provider = node.dataset.provider; state.conversationId = state.conversations.find((item) => item.provider === state.provider)?.id || null; loadConversation(); }));
+  $('#connectedLabel').innerHTML = connected() ? `<span class="status-dot"></span><span>${t('ready')}</span>` : `<span class="status-dot" style="background:var(--danger)"></span><span>${t('noProvider')}</span>`;
+}
+
+function formatDate(value) {
+  if (!value) return '';
+  try { return new Intl.DateTimeFormat(state.lang === 'fa' ? 'fa-IR' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value.replace(' ', 'T') + (value.includes('Z') ? '' : 'Z'))); } catch { return value; }
+}
+
+function renderThreads() {
+  const query = state.search.toLowerCase();
+  const list = state.conversations.filter((item) => item.title.toLowerCase().includes(query));
+  $('#threadCount').textContent = `${state.conversations.length} ${t('conversations')}`;
+  $('#chatCount').textContent = state.conversations.length;
+  $('#threadList').innerHTML = list.length ? list.map((item) => { const info = providerInfo(item.provider); return `<button class="thread-item ${item.id === state.conversationId ? 'selected' : ''}" data-conversation="${item.id}"><span class="thread-provider ${item.provider}">${info.icon}</span><span class="thread-copy"><b>${escapeHtml(item.title)}</b><small>${info.name} · ${formatDate(item.updated_at)}</small></span></button>`; }).join('') : `<div class="empty-state">${t('emptyThreads')}</div>`;
+  $$('.thread-item').forEach((node) => node.addEventListener('click', () => { state.conversationId = node.dataset.conversation; state.provider = state.conversations.find((item) => item.id === state.conversationId)?.provider || state.provider; renderModels(); loadConversation(); }));
+}
+
+function renderMessages() {
+  const info = providerInfo(state.provider);
+  if (!state.messages.length) {
+    const body = connected() ? t('emptyMessages') : t('connectToChat');
+    $('#messageStream').innerHTML = `<div class="stream-date">${t('today')}</div><div class="empty-state"><div class="intro-orb" style="margin:0 auto 18px;width:66px;height:66px;border-radius:21px"><span>${info.icon}</span></div><strong>${escapeHtml(body)}</strong>${connected() ? '' : `<br /><button class="outline-button" style="margin-top:14px" id="inlineConnect">${t('goConnections')}</button>`}</div>`;
+    $('#inlineConnect')?.addEventListener('click', () => switchPage('connections'));
+  } else {
+    $('#messageStream').innerHTML = `<div class="stream-date">${t('today')}</div>` + state.messages.map((item) => `<div class="message-row ${item.role === 'user' ? 'user' : ''}"><div class="message-avatar">${item.role === 'user' ? 'AR' : escapeHtml(info.icon)}</div><div class="message-bubble">${escapeHtml(item.content).replace(/\n/g, '<br>')}<span class="message-meta">${item.role === 'user' ? t('you') : info.name} · ${formatDate(item.created_at)}</span></div></div>`).join('');
   }
-  function setLanguage(lang){
-    lang=lang==='en'?'en':'fa';
-    document.documentElement.lang=lang;document.documentElement.dir=lang==='en'?'ltr':'rtl';localStorage.setItem(K.lang,lang);
-    document.body.classList.toggle('omniai-en',lang==='en');
-    updateLanguageUI(lang);translateStatic(lang);
+  $('#messageStream').scrollTop = $('#messageStream').scrollHeight;
+}
+
+function renderProviders() {
+  $('#providerGrid').innerHTML = Object.entries(providers).map(([key, item]) => {
+    const connection = state.connections.find((entry) => entry.provider === key);
+    const isConnected = Boolean(connection);
+    return `<article class="provider-card"><div class="provider-card-top"><div class="provider-logo ${key}">${item.icon}</div><span class="provider-state ${isConnected ? 'connected' : ''}">${isConnected ? t('connected') : t('notConnected')}</span></div><h3>${item.name}</h3><p>${t(item.descriptionKey)}</p>${isConnected ? `<div class="account-line"><span>◉</span><b>${escapeHtml(connection.email)}</b></div><button class="provider-submit disconnect" data-disconnect="${key}">${t('disconnect')}</button>` : `<form class="connection-form" data-connect="${key}"><label><span class="field-label">${t('emailLabel')}</span><input class="field-input" name="email" type="email" required placeholder="${t('emailPlaceholder')}" autocomplete="email" /></label><label><span class="field-label">${t('apiKeyLabel')}</span><input class="field-input" name="apiKey" type="password" required minlength="8" placeholder="${t('apiKeyPlaceholder')}" autocomplete="off" /></label><button class="provider-submit" type="submit">${t('connect')}</button></form>`}<div class="provider-footnote">⌁ ${t('verifyHint')}</div></article>`;
+  }).join('');
+  $$('[data-connect]').forEach((form) => form.addEventListener('submit', connectProvider));
+  $$('[data-disconnect]').forEach((button) => button.addEventListener('click', () => disconnectProvider(button.dataset.disconnect)));
+}
+
+async function connectProvider(event) {
+  event.preventDefault();
+  const form = event.currentTarget; const button = form.querySelector('button'); button.disabled = true; button.textContent = t('loading');
+  const body = Object.fromEntries(new FormData(form).entries()); body.provider = form.dataset.connect;
+  try {
+    await api('connections', { method: 'POST', body: JSON.stringify(body) });
+    await loadState();
+    toast(t('connectedSuccess'));
+  } catch (error) { toast(error.message); button.disabled = false; button.textContent = t('connect'); }
+}
+
+async function disconnectProvider(provider) {
+  try { await api(`connections/${provider}`, { method: 'DELETE' }); await loadState(); toast(t('disconnected')); }
+  catch (error) { toast(error.message); }
+}
+
+async function loadConversation() {
+  renderModels(); renderThreads();
+  if (!state.conversationId) { state.messages = []; renderMessages(); return; }
+  try { const data = await api(`conversations/${state.conversationId}`); state.messages = data.messages || []; renderMessages(); }
+  catch (error) { state.messages = []; renderMessages(); toast(error.message); }
+}
+
+async function loadState() {
+  try {
+    const data = await api('state');
+    const previousConversation = state.conversationId;
+    state.connections = data.connections || [];
+    state.conversations = data.conversations || [];
+    state.settings = data.settings || state.settings;
+    state.lang = state.settings.language || state.lang;
+    const preserved = state.conversations.find((item) => item.id === previousConversation);
+    state.provider = preserved?.provider || state.conversations[0]?.provider || state.provider;
+    state.conversationId = preserved?.id || state.conversations.find((item) => item.provider === state.provider)?.id || null;
+    state.online = true;
+    applyCopy(); applySettings(); renderModels(); renderThreads(); renderProviders(); await loadConversation();
+    toast(t('stateLoaded'));
+  } catch (error) {
+    state.online = false; renderModels(); renderThreads(); renderProviders(); renderMessages(); toast(t('stateOffline'));
   }
-  function updateLanguageUI(lang){
-    $$('[data-lang-choice]').forEach(b=>b.classList.toggle('active-lang',b.dataset.langChoice===lang));
-  }
+}
 
-  async function api(path,opts={}){
-    const r=await fetch(path,{credentials:'include',headers:{'Content-Type':'application/json',...(opts.headers||{})},...opts});
-    const text=await r.text();let data;try{data=JSON.parse(text)}catch{data={ok:false,message:text}}
-    if(!r.ok) {const e=new Error(data.message||data.error||`HTTP ${r.status}`);e.data=data;e.status=r.status;throw e}
-    return data;
-  }
+async function sendMessage() {
+  const input = $('#messageInput'); const message = input.value.trim();
+  if (!message || !connected()) { if (!connected()) toast(t('connectionRequired')); return; }
+  const button = $('#sendButton'); button.disabled = true; input.value = ''; input.style.height = '31px';
+  const optimistic = { id: `temp-${Date.now()}`, role: 'user', content: message, created_at: new Date().toISOString() };
+  state.messages.push(optimistic); renderMessages();
+  const previous = button.textContent; button.textContent = '…';
+  try {
+    const data = await api('chat', { method: 'POST', body: JSON.stringify({ provider: state.provider, conversationId: state.conversationId, message }) });
+    state.conversationId = data.conversationId;
+    await loadState();
+  } catch (error) { state.messages = state.messages.filter((item) => item !== optimistic); renderMessages(); toast(error.message); }
+  finally { button.disabled = false; button.textContent = previous; }
+}
 
-  function ensureModal(){
-    if($('#omniai-modal'))return;
-    const m=document.createElement('div');m.id='omniai-modal';m.className='omniai-modal';m.innerHTML=`<div class="omniai-modal-backdrop" data-modal-close></div><section class="omniai-modal-card" role="dialog" aria-modal="true"><button class="omniai-modal-close" type="button" data-modal-close>×</button><div id="omniai-modal-icon" class="omniai-modal-icon">◎</div><h3 id="omniai-modal-title"></h3><p id="omniai-modal-text"></p><div id="omniai-modal-actions" class="omniai-modal-actions"></div></section>`;document.body.appendChild(m);$$('[data-modal-close]',m).forEach(e=>e.addEventListener('click',closeModal));
-  }
-  function openModal(title,text,actions=[]){ensureModal();$('#omniai-modal-title').textContent=title;$('#omniai-modal-text').textContent=text;const a=$('#omniai-modal-actions');a.innerHTML='';actions.forEach(x=>{const b=document.createElement('button');b.className=x.primary?'omniai-btn omniai-btn-primary':'omniai-btn';b.textContent=x.label;b.onclick=()=>{x.onClick?.();closeModal()};a.appendChild(b)});$('#omniai-modal').classList.add('open')}
-  function closeModal(){$('#omniai-modal')?.classList.remove('open')}
+async function createConversation() {
+  if (!connected()) { switchPage('connections'); toast(t('connectionRequired')); return; }
+  state.conversationId = null; state.messages = []; renderThreads(); renderMessages(); $('#messageInput').focus();
+}
 
-  async function authGate(){
-    try{const s=await api('/api/auth/status');
-      if(s.required&&!s.authenticated){
-        openModal('ورود به OmniAI','برای امنیت APIها و تاریخچه ابری این سایت، رمز خصوصی Cloudflare را وارد کنید.',[{label:'ورود',primary:true,onClick:async()=>{const p=prompt('رمز ورود OmniAI را وارد کنید:');if(!p)return;try{await api('/api/auth/login',{method:'POST',body:JSON.stringify({password:p})});toast('ورود با موفقیت انجام شد.');location.reload()}catch(e){toast(e.message)}}},{label:'لغو'}]);
-        return false;
-      }
-      return true;
-    }catch{return true}
-  }
+async function saveSettings(patch) {
+  state.settings = { ...state.settings, ...patch };
+  applySettings();
+  try { await api('settings', { method: 'PATCH', body: JSON.stringify(state.settings) }); toast(t('saved')); }
+  catch (error) { toast(error.message); }
+}
 
-  async function loadProviderStatus(){
-    try{return await api('/api/providers')}catch{return {ok:false,providers:{chatgpt:{configured:false},deepseek:{configured:false},gemini:{configured:false},ibnsina:{configured:!!localStorage.getItem(K.ibnUrl)},}}}
-  }
+function switchPage(name) {
+  $$('.page').forEach((page) => page.classList.toggle('active', page.id === `page-${name}`));
+  $$('.nav-item').forEach((item) => item.classList.toggle('active', item.dataset.page === name));
+  $('#pageTitle').textContent = t(name === 'info' ? 'siteInfo' : name);
+  $('#sidebar').classList.remove('open');
+}
 
-  function providerName(key){return PROVIDERS[key]?.label||key}
-  function getSelectedProvider(){return localStorage.getItem(K.provider)||'deepseek'}
-  function setSelectedProvider(p){localStorage.setItem(K.provider,p)}
+$$('.nav-item').forEach((button) => button.addEventListener('click', () => switchPage(button.dataset.page)));
+$('#sidebarInfo').addEventListener('click', () => switchPage('info'));
+$('#menuButton').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
+$('#newConversation').addEventListener('click', createConversation);
+$('#railNew').addEventListener('click', createConversation);
+$('#sendButton').addEventListener('click', sendMessage);
+$('#messageInput').addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
+$('#messageInput').addEventListener('input', (event) => { event.target.style.height = '31px'; event.target.style.height = `${Math.min(event.target.scrollHeight, 130)}px`; });
+$('#conversationSearch').addEventListener('input', (event) => { state.search = event.target.value; renderThreads(); });
+$('#languageButton').addEventListener('click', () => saveSettings({ language: state.lang === 'fa' ? 'en' : 'fa' }).then(() => { state.lang = state.settings.language; applyCopy(); renderModels(); renderThreads(); renderProviders(); renderMessages(); }));
+$$('#languageSwitch button').forEach((button) => button.addEventListener('click', () => saveSettings({ language: button.dataset.lang }).then(() => { state.lang = state.settings.language; applyCopy(); renderModels(); renderThreads(); renderProviders(); renderMessages(); })));
+$$('.theme-tile').forEach((button) => button.addEventListener('click', () => saveSettings({ theme: button.dataset.theme })));
+$$('.accent').forEach((button) => button.addEventListener('click', () => saveSettings({ accent: button.dataset.accent })));
+$('#quickTheme').addEventListener('click', () => { const themes = ['aurora', 'cat', 'cyber', 'retro']; saveSettings({ theme: themes[(themes.indexOf(state.settings.theme) + 1) % themes.length] }); });
+$('#refreshState').addEventListener('click', loadState);
 
-  function initModelTabs(){
-    const tabs=$$('.model-tab');const title=$('#active-model-title');
-    if(!tabs.length)return;
-    let selected=getSelectedProvider();if(!tabs.some(t=>t.dataset.model===selected))selected=tabs[0].dataset.model||'deepseek';
-    const activate=tab=>{
-      tabs.forEach(t=>{t.classList.toggle('bg-primary',t===tab);t.classList.toggle('text-on-primary',t===tab);t.classList.toggle('shadow-sm',t===tab);t.classList.toggle('bg-surface-container-high/60',t!==tab);t.classList.toggle('text-on-surface-variant',t!==tab)});
-      const p=tab.dataset.model||'deepseek';setSelectedProvider(p);
-      const meta={chatgpt:'ChatGPT / OpenAI',deepseek:'DeepSeek',gemini:'Google Gemini',ibnsina:'IbnSina-1.5B'};
-      if(title)title.textContent=meta[p]||p;
-      $$('[data-selected-provider-label]').forEach(e=>e.textContent=meta[p]||p);
-    };
-    tabs.forEach(t=>t.addEventListener('click',()=>activate(t)));activate(tabs.find(t=>t.dataset.model===selected)||tabs[0]);
-  }
-
-  function renderMessage(m){
-    const role=m.role==='user'?'user':'assistant';
-    const box=document.createElement('div');
-    box.className=role==='user'?'omniai-msg user-msg':'omniai-msg ai-msg';
-    const provider=m.providerId?providerName(m.providerId):'OmniAI';
-    box.innerHTML=role==='user'
-      ?`<div class="omniai-avatar user-avatar">AR</div><div class="omniai-msg-main"><div class="omniai-msg-meta"><strong>شما</strong><span>${esc(m.time||nowLabel())}</span></div><div class="omniai-bubble user-bubble"></div><div class="omniai-msg-actions"><button type="button" data-copy-msg>کپی</button></div></div>`
-      :`<div class="omniai-avatar ai-avatar">◎</div><div class="omniai-msg-main"><div class="omniai-msg-meta"><strong>${esc(provider)}</strong><span>${esc(m.time||nowLabel())}</span></div><div class="omniai-bubble ai-bubble"></div><div class="omniai-msg-actions"><button type="button" data-copy-msg>کپی</button><button type="button" data-retry>تولید مجدد</button></div></div>`;
-    box.querySelector('.omniai-bubble').textContent=m.content||'';
-    box.dataset.role=role;box.dataset.messageId=m.id||'';
-    return box;
-  }
-  function conversationHistoryLocal(){return safeJSON(K.localMessages,[])}
-  function saveLocalMessage(m){const a=conversationHistoryLocal();a.push(m);saveJSON(K.localMessages,a.slice(-300))}
-
-  async function getCloudConversations(){try{return (await api('/api/conversations')).conversations||[]}catch{return []}}
-
-  function clearChatArea(){const c=$('#chat-messages-scroll');if(!c)return;c.innerHTML='';}
-  function renderChatMessages(messages){
-    const c=$('#chat-messages-scroll');if(!c)return;clearChatArea();
-    if(!messages.length){c.innerHTML='<div data-chat-placeholder class="omniai-empty-chat"><div class="omniai-empty-icon">◎</div><strong>یک مدل را انتخاب کنید و گفت‌وگو را شروع کنید.</strong><span>پیام‌های جدید در تاریخچه OmniAI ذخیره می‌شوند؛ در حالت محلی نیز در مرورگر نگهداری می‌شوند.</span></div>';return}
-    messages.forEach(m=>c.appendChild(renderMessage(m)));c.scrollTop=c.scrollHeight;
-    $$('[data-copy-msg]',c).forEach(b=>b.addEventListener('click',async()=>{const t=b.closest('.omniai-msg').querySelector('.omniai-bubble').textContent;try{await navigator.clipboard.writeText(t);toast('پیام کپی شد.')}catch{toast('کپی در این مرورگر در دسترس نیست.')}}));
-  }
-
-  async function initChat(){
-    const input=$('#prompt-input'),send=$('#send-button');if(!input||!send)return;
-    initModelTabs();
-    const activeConversation=localStorage.getItem(K.conversation);
-    let cloudLoaded=false;
-    if(activeConversation){
-      try{
-        const d=await api('/api/conversations/'+encodeURIComponent(activeConversation));
-        const msgs=(d.conversation?.messages||[]).map(m=>({id:m.id,role:m.role,content:m.content,providerId:m.provider_id,time:new Intl.DateTimeFormat(document.documentElement.lang==='en'?'en-US':'fa-IR',{hour:'2-digit',minute:'2-digit'}).format(new Date(m.created_at))}));
-        if(msgs.length){renderChatMessages(msgs);cloudLoaded=true;}
-      }catch{}
-    }
-    if(!cloudLoaded){const local=conversationHistoryLocal();if(local.length) renderChatMessages(local.slice(-40));else renderChatMessages([]);}
-
-    $$('.prompt-chip').forEach(chip=>chip.addEventListener('click',()=>{input.value=chip.textContent.trim();input.focus()}));
-    input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send.click()}});
-    input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,220)+'px'});
-    send.addEventListener('click',()=>sendChat());
-    async function sendChat(){
-      const text=input.value.trim();if(!text)return;
-      const provider=getSelectedProvider();
-      const conversationId=localStorage.getItem(K.conversation)||crypto.randomUUID();localStorage.setItem(K.conversation,conversationId);
-      const history=conversationHistoryLocal().slice(-30).map(m=>({role:m.role,content:m.content}));
-      const userMsg={id:crypto.randomUUID(),role:'user',content:text,providerId:provider,time:nowLabel()};saveLocalMessage(userMsg);renderChatMessages(conversationHistoryLocal().slice(-40));
-      input.value='';input.style.height='auto';send.disabled=true;send.dataset.busy='1';
-      const pending={id:'pending',role:'assistant',content:'در حال ارتباط با '+providerName(provider)+' ...',providerId:provider,time:nowLabel()};
-      const c=$('#chat-messages-scroll');c.appendChild(renderMessage(pending));c.scrollTop=c.scrollHeight;
-      try{
-        let result;
-        if(provider==='ibnsina'){
-          const endpoint=localStorage.getItem(K.ibnUrl)||'http://127.0.0.1:11434/v1/chat/completions';
-          const payload={model:PROVIDERS.ibnsina.model,messages:[...history,{role:'user',content:text}],stream:false};
-          const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok)throw new Error(d.error?.message||`IbnSina HTTP ${r.status}`);result=d.choices?.[0]?.message?.content||d.response||'';
-        }else{
-          const d=await api('/api/chat',{method:'POST',body:JSON.stringify({providerId:provider,model:PROVIDERS[provider].model,message:text,history,conversationId,title:text.slice(0,80)})});result=d.text||'';
-        }
-        const a=conversationHistoryLocal().filter(m=>m.id!=='pending');a.push({id:crypto.randomUUID(),role:'assistant',content:result||'پاسخی دریافت نشد.',providerId:provider,time:nowLabel()});saveJSON(K.localMessages,a.slice(-300));renderChatMessages(a.slice(-40));toast('پاسخ دریافت شد.');
-      }catch(e){
-        const a=conversationHistoryLocal();const msg=(e.data?.message||e.message||'خطا در اتصال به سرویس.');a.push({id:crypto.randomUUID(),role:'assistant',content:'خطا: '+msg,providerId:provider,time:nowLabel()});saveJSON(K.localMessages,a.slice(-300));renderChatMessages(a.slice(-40));toast(msg);
-      }finally{send.disabled=false;delete send.dataset.busy}
-    }
-
-    const webSearch=$('#web-search-toggle');webSearch?.addEventListener('click',()=>{webSearch.classList.toggle('ring-2');toast('وب‌سرچ در این نسخه فقط وضعیت UI است و بدون provider tool فعال نمی‌شود.')});
-    const newBtns=$$('button').filter(b=>/گفتگوی.*تازه|new chat/i.test(b.textContent));newBtns.forEach(b=>b.addEventListener('click',()=>{localStorage.removeItem(K.conversation);saveJSON(K.localMessages,[]);renderChatMessages([]);toast('گفتگوی تازه ساخته شد.')}));
-  }
-
-  function patchStaticClaims(){
-    const replacements=[
-      ['بدون نیاز به API Key اختصاصی — نشست امن فعال از طریق اکانت متصل جیمیل','اتصال امن با روش رسمی provider؛ هیچ کلید مخفی در مرورگر قرار نمی‌گیرد.'],
-      ['مصرف مستقیم از سهمیه جیمیل','ارسال از مسیر رسمی provider در صورت فعال بودن اتصال'],
-      ['اشتراک حساب جیمیل: Plus / نامحدود','وضعیت حساب/سهمیه فقط در صورت ارائه‌شدن توسط provider نمایش داده می‌شود'],
-      ['بدون نیاز به توکن دستی','اعتبارنامه‌ها باید سمت Cloudflare مدیریت شوند'],
-      ['بدون نیاز به API Key! فقط با لاگین امن جیمیل یا حساب کاربری‌تان، تاریخچه‌ها و سهمیه‌های قبلی شما به صورت خودکار به اینجا منتقل می‌شوند.','ایمیل به‌تنهایی مجوز دسترسی به تاریخچه خصوصی سرویس‌ها نیست؛ اتصال فقط با روش رسمی provider انجام می‌شود.'],
-      ['با اتصال جیمیل ثبت‌نامی در سامانه ابن‌سینا، دسترسی رایگان و پایدار به مدل بومی فارسی و شبیه‌ساز بالینی پزشکی فورا فعال می‌شود.','IbnSina-1.5B در این پروژه به‌صورت مدل محلی و از طریق endpoint سازگار با OpenAI/Ollama متصل می‌شود.'],
-      ['همگام‌سازی ابری','API و تاریخچه ابری OmniAI'],
-      ['فعال','وضعیت واقعی']
-    ];
-    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(n=>replacements.forEach(([a,b])=>{if(n.nodeValue?.includes(a))n.nodeValue=n.nodeValue.replaceAll(a,b)}));
-  }
-
-  function wireNavigation(){
-    $$('a[href]').forEach(a=>{const h=a.getAttribute('href')||'';if(/^(index|history|connections|settings)\.html$/.test(h))a.dataset.omniaiNav='1'});
-    const current=page;$$('[data-omniai-nav]').forEach(a=>{const h=(a.getAttribute('href')||'').split('/').pop();a.setAttribute('aria-current',h===current?'page':'false')});
-  }
-
-  function wireMobileNav(){const aside=document.querySelector('body > aside');if(!aside)return;if(!$('#omniai-mobile-toggle')){const b=document.createElement('button');b.id='omniai-mobile-toggle';b.className='omniai-mobile-toggle';b.textContent='☰';b.type='button';document.body.appendChild(b);b.onclick=()=>{aside.classList.toggle('omniai-open');b.textContent=aside.classList.contains('omniai-open')?'×':'☰'}}}
-
-  async function initConnections(){
-    const status=await loadProviderStatus();const cards=$$('main .grid > div').filter(x=>/ChatGPT|DeepSeek|Gemini|ابن‌سینا|IbnSina/.test(x.textContent||''));
-    const map={chatgpt:cards.find(c=>/ChatGPT/.test(c.textContent)),deepseek:cards.find(c=>/DeepSeek/.test(c.textContent)),gemini:cards.find(c=>/Gemini/.test(c.textContent)),ibnsina:cards.find(c=>/ابن‌سینا|IbnSina/.test(c.textContent))};
-    Object.entries(map).forEach(([id,card])=>{if(!card)return;const configured=status.providers?.[id]?.configured;const badge=Array.from(card.querySelectorAll('span')).find(s=>/متصل است|در انتظار اتصال/.test(s.textContent||''));if(badge){badge.textContent=configured?'● متصل/آماده':'○ نیازمند اتصال';badge.className=configured?'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm':'inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-error-container/20 text-error font-label-sm text-label-sm'}
-      $$('button',card).forEach(btn=>{btn.addEventListener('click',async()=>{const t=btn.textContent.replace(/\s+/g,' ').trim();if(id==='ibnsina'&&/ورود سریع|اتصال از طریق یاهو/.test(t)){openModal('IbnSina 1.5B','برای این پروژه اتصال معتبر، endpoint محلی یا سرویس سازگار با API را وارد کنید؛ Gmail/Yahoo به‌تنهایی دسترسی به مدل داخلی نمی‌دهد.',[{label:'تنظیم endpoint',primary:true,onClick:()=>{const u=prompt('آدرس endpoint مدل محلی را وارد کنید:',localStorage.getItem(K.ibnUrl)||'http://127.0.0.1:11434/v1/chat/completions');if(u){localStorage.setItem(K.ibnUrl,u);toast('Endpoint ذخیره شد.')}}},{label:'لغو'}]);return}
-        if(/تغییر جیمیل|مدیریت سشن|پیکربندی دامنه|اتصال/.test(t)&&id!=='ibnsina'){openModal(providerName(id),`این صفحه فقط از اتصال رسمی provider پشتیبانی می‌کند. ورود با Gmail/Yahoo به‌تنهایی تاریخچه خصوصی ${providerName(id)} را در اختیار سایت قرار نمی‌دهد. برای API chat، اعتبارنامه امن باید در Cloudflare تنظیم شود.`,[{label:'باشه',primary:true}]);return}
-        if(/همگام/.test(t)){toast('همگام‌سازی فقط برای داده‌هایی انجام می‌شود که provider API واقعاً ارائه کند.');}
-        if(/قطع اتصال/.test(t)){toast('اتصال محلی/سمت مرورگر پاک شد. اعتبارنامه Cloudflare از Dashboard حذف می‌شود.');}
-      })});
-    });
-    patchStaticClaims();
-  }
-
-  async function initHistory(){
-    const filter=$('#history-filter');const local=conversationHistoryLocal();
-    const list=$('#history-list');
-    if(list){list.innerHTML='';let cloud=[];try{cloud=await getCloudConversations()}catch{}
-      const all=[...cloud.map(c=>({id:c.id,title:c.title,provider:c.provider_id,updated:c.updated_at,source:'cloud'})),...local.reduce((acc,m)=>{const id='local';if(!acc.some(x=>x.id===id))acc.push({id,title:'گفتگوی محلی',provider:m.providerId||'unknown',updated:Date.now(),source:'local'});return acc},[])];
-      if(!all.length)list.innerHTML='<div class="history-row">هنوز گفتگویی ذخیره نشده است.</div>';
-      all.slice(0,100).forEach(c=>{const row=document.createElement('div');row.className='history-row';row.dataset.search=`${c.title||''} ${c.provider||''}`.toLowerCase();row.innerHTML=`<div><div class="font-title-sm text-title-sm text-on-surface">${esc(c.title||'گفتگو')}</div><div class="font-label-sm text-label-sm text-on-surface-variant">${esc(providerName(c.provider||''))} • ${c.source==='cloud'?'ابر Cloudflare':'محلی مرورگر'}</div></div><span class="text-primary">${c.source==='cloud'?'Cloud':'Local'}</span>`;row.addEventListener('click',()=>{if(c.source==='local'){location.href='index.html';return}localStorage.setItem(K.conversation,c.id);location.href='index.html'});list.appendChild(row)});
-    }
-    filter?.addEventListener('input',()=>{const q=filter.value.trim().toLowerCase();$$('.history-row',list||document).forEach(r=>r.style.display=(r.dataset.search||r.textContent.toLowerCase()).includes(q)?'flex':'none')});
-    const clear=$('#clear-local-history');clear?.addEventListener('click',()=>{saveJSON(K.localMessages,[]);toast('تاریخچه محلی پاک شد.');setTimeout(()=>location.reload(),300)});
-    const stat=$('#active-theme-stat');updateThemeStat({modern:'مدرن',cat:'گربه‌ای',cyberpunk:'سایبرپانک',retro:'دهه ۱۹۹۰'}[localStorage.getItem(K.theme)||'modern']);
-    if(stat)stat.textContent=stat.textContent;
-  }
-
-  function injectLocalModelSettings(){
-    if(document.getElementById('omniai-local-model-panel')) return;
-    const main=document.querySelector('main');if(!main)return;
-    const panel=document.createElement('section');panel.id='omniai-local-model-panel';panel.className='rounded-xl bg-surface-container-low p-6 shadow-sm mt-6';
-    panel.innerHTML=`<div class="flex items-center justify-between gap-3 flex-wrap"><div><h2 class="font-title-lg text-title-lg text-on-surface">اتصال IbnSina-1.5B محلی</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">برای اجرای مدل روی سیستم خود، endpoint سازگار با OpenAI یا Ollama را ثبت کنید.</p></div><span class="omniai-local-badge">LOCAL</span></div><div class="mt-4 flex flex-col sm:flex-row gap-2"><input id="ibnsina-endpoint" class="flex-1 bg-surface-container rounded-lg px-3 py-2 text-on-surface border border-white/10" dir="ltr" placeholder="http://127.0.0.1:11434/v1/chat/completions"/><button id="save-ibnsina" class="omniai-btn omniai-btn-primary">ذخیره endpoint</button></div><p class="text-xs text-on-surface-variant mt-2">برای localhost، سرویس مدل باید روی همان دستگاه روشن باشد و CORS درخواست‌های سایت را بپذیرد.</p>`;main.appendChild(panel);
-  }
-
-  function initSettings(){
-    injectLocalModelSettings();
-    $$('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>applyTheme(b.dataset.themeChoice)));
-    $$('.theme-card').forEach(c=>c.addEventListener('click',()=>applyTheme(c.dataset.theme||'modern')));
-    $$('[data-lang-choice]').forEach(b=>b.addEventListener('click',()=>{setLanguage(b.dataset.langChoice);toast(b.dataset.langChoice==='en'?'English enabled.':'زبان فارسی فعال شد.')}));
-    $$('button').forEach(b=>{if(/بازنشانی پیش‌فرض/.test(b.textContent))b.addEventListener('click',()=>{applyTheme('modern');setLanguage('fa');toast('تنظیمات به حالت پیش‌فرض برگشت.')})});
-    const ibn=$('#ibnsina-endpoint');if(ibn)ibn.value=localStorage.getItem(K.ibnUrl)||'';
-    $('#save-ibnsina')?.addEventListener('click',()=>{localStorage.setItem(K.ibnUrl,$('#ibnsina-endpoint').value.trim());toast('Endpoint ابن‌سینا ذخیره شد.')});
-  }
-
-  async function boot(){
-    const authOk=await authGate();if(!authOk)return;
-    applyTheme(localStorage.getItem(K.theme)||'modern');setLanguage(localStorage.getItem(K.lang)||'fa');wireNavigation();wireMobileNav();patchStaticClaims();
-    if(page==='index.html'||page==='')await initChat();
-    if(page==='connections.html')await initConnections();
-    if(page==='history.html')await initHistory();
-    if(page==='settings.html')initSettings();
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-    // Keep provider status badges honest on the sidebar.
-    const s=await loadProviderStatus();Object.keys(PROVIDERS).forEach(id=>{const dots=$$('.provider-dot-'+id);dots.forEach(d=>d.classList.toggle('is-ready',!!s.providers?.[id]?.configured))});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
+const requestedView = new URLSearchParams(window.location.search).get('view');
+if (['chat', 'connections', 'settings', 'info'].includes(requestedView)) switchPage(requestedView);
+applyCopy(); applySettings(); renderModels(); renderThreads(); renderProviders(); renderMessages(); loadState();
