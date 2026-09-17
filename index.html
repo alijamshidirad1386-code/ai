@@ -1,332 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1020" />
+    <meta name="description" content="ALUNA — your premium AI workspace." />
+    <title>ALUNA · AI workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body data-theme="aurora">
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-symbol">A<span>✦</span></div>
+          <div><strong>ALUNA</strong><small>AI WORKSPACE</small></div>
+        </div>
+        <div class="workspace-badge"><span class="status-dot"></span><span data-i18n="privateWorkspace">Private workspace</span><b>PRO</b></div>
+        <nav class="main-nav">
+          <span class="nav-caption" data-i18n="workspace">Workspace</span>
+          <button class="nav-item active" data-page="chat"><i>◈</i><span data-i18n="chat">Chat</span><em id="chatCount">0</em></button>
+          <button class="nav-item" data-page="connections"><i>⌘</i><span data-i18n="connections">Connections</span></button>
+          <span class="nav-caption nav-caption-spaced" data-i18n="customize">Customize</span>
+          <button class="nav-item" data-page="settings"><i>◌</i><span data-i18n="settings">Settings</span></button>
+          <button class="nav-item" data-page="info"><i>✦</i><span data-i18n="siteInfo">Site information</span></button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="creator-mini"><div class="creator-avatar">AR</div><div><strong>ALIRAHIMI</strong><small data-i18n="creatorRole">Creator &amp; builder</small></div><button id="sidebarInfo" aria-label="Creator information">↗</button></div>
+          <div class="sidebar-note"><span>⌁</span><span data-i18n="encryptedNote">Your credentials are encrypted before storage.</span></div>
+        </div>
+      </aside>
 
-<html dir="rtl" lang="fa"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-on-surface":"#2c303b","error-container":"#93000a","surface-dim":"#0f131d","on-secondary-fixed":"#001f26","on-primary-fixed-variant":"#2f2ebe","on-tertiary":"#003824","on-primary-fixed":"#07006c","surface-container-high":"#262a35","on-secondary":"#003640","surface-container-lowest":"#0a0e18","tertiary-fixed":"#6ffbbe","on-error-container":"#ffdad6","tertiary-fixed-dim":"#4edea3","on-background":"#dfe2f1","background":"#0f131d","surface-variant":"#313540","primary-fixed":"#e1e0ff","surface-container-highest":"#313540","primary":"#c0c1ff","on-surface":"#dfe2f1","on-tertiary-container":"#000703","inverse-primary":"#494bd6","on-primary":"#1000a9","on-surface-variant":"#c7c4d7","on-secondary-fixed-variant":"#004e5c","secondary-fixed-dim":"#4cd7f6","secondary-container":"#03b5d3","on-error":"#690005","primary-fixed-dim":"#c0c1ff","secondary-fixed":"#acedff","on-tertiary-fixed-variant":"#005236","on-tertiary-fixed":"#002113","tertiary":"#4edea3","surface":"#0f131d","inverse-surface":"#dfe2f1","surface-bright":"#353944","outline-variant":"#464554","surface-container":"#1c1f2a","on-secondary-container":"#00424e","surface-tint":"#c0c1ff","outline":"#908fa0","secondary":"#4cd7f6","surface-container-low":"#171b26","error":"#ffb4ab","primary-container":"#8083ff","tertiary-container":"#00885d","on-primary-container":"#0d0096"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","space-2xl":"3rem","gutter":"1rem","gutter-desktop":"1.5rem","space-xl":"2rem","margin-tablet":"1.5rem","space-lg":"1.5rem","space-md":"1rem","space-2xs":"0.125rem","margin-desktop":"2rem","space-xs":"0.25rem","gutter-tablet":"1.25rem","margin":"1rem"},"fontFamily":{"title-sm":["Inter"],"title-lg":["Inter"],"body-lg":["Inter"],"label-lg":["JetBrains Mono"],"headline-md":["Space Grotesk"],"label-md":["JetBrains Mono"],"headline-lg":["Space Grotesk"],"headline-sm":["Space Grotesk"],"label-sm":["JetBrains Mono"],"body-sm":["Inter"],"title-md":["Inter"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Inter"],"display-xl":["Space Grotesk"],"display-xl-mobile":["Space Grotesk"]},"fontSize":{"title-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"title-lg":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"500"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"display-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"700"}],"display-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}};</script><link href="assets/overrides.css" rel="stylesheet"/></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary min-h-screen"><aside class="fixed right-0 top-0 h-full w-72 bg-surface-container-low/90 backdrop-blur-xl z-50 flex flex-col justify-between py-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-md"><div class="px-space-lg py-space-sm flex items-center gap-space-sm"><img alt="OmniAI Neural Hub Logo" class="h-8 w-auto object-contain" src="assets/omniai-logo.svg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-tight">OmniAI</span><span class="font-label-sm text-label-sm text-on-surface-variant">هاب متمرکز هوش مصنوعی</span></div></div><div class="px-space-md"><div class="bg-surface-container-high/60 rounded-xl p-space-sm flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant">پروایدرهای فعال</span><span class="flex h-2 w-2 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span></span></div><div class="grid grid-cols-2 gap-space-xs pt-space-xs"><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">ChatGPT</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">DeepSeek</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface truncate">Gemini</span></div><div class="flex items-center gap-1.5 px-space-xs py-1 rounded bg-surface-container-lowest"><span class="h-1.5 w-1.5 rounded-full bg-tertiary-fixed-dim"></span><span class="font-label-sm text-label-sm text-on-surface truncate">IbnSina</span></div></div></div></div><nav class="flex flex-col gap-space-xs px-space-md" data-active-classes="bg-primary-container text-on-primary-container font-title-sm shadow-sm"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl transition-all group bg-primary-container text-on-primary-container font-title-sm shadow-sm" data-omniai-nav="1" data-path="chat-hub" href="index.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">forum</span><span class="font-title-sm text-title-sm">چت و گفتگو</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="account-connections" href="connections.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">hub</span><span class="font-title-sm text-title-sm">مدیریت اتصالات و اکانت‌ها</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="theme-language-settings" href="settings.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">palette</span><span class="font-title-sm text-title-sm">تنظیمات و شخصی‌سازی تم</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all group" data-omniai-nav="1" data-path="token-quota-analytics" href="history.html"><span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">pie_chart</span><span class="font-title-sm text-title-sm">آمار مصرف و منابع حساب</span></a></nav></div><div class="px-space-md flex flex-col gap-space-sm"><div class="p-space-sm rounded-xl bg-surface-container/60 backdrop-blur flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary text-[18px]">cloud_done</span><span class="font-label-sm text-label-sm text-on-surface-variant">همگام‌سازی ابری</span></div><span class="font-label-sm text-label-sm text-tertiary px-1.5 py-0.5 rounded bg-tertiary-container/30">فعال</span></div><div class="flex items-center justify-between pt-space-xs px-space-xs"><button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">translate</span><span class="font-label-sm text-label-sm">FA / EN</span></button><button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">help</span><span class="font-label-sm text-label-sm">پشتیبانی</span></button></div></div></aside><div class="pr-72"><header class="fixed top-0 right-72 left-0 h-16 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-full"><span class="material-symbols-outlined text-[16px] text-primary">auto_mode</span><span class="font-label-sm text-label-sm text-on-surface">تم فعال: مدرن دیفالت</span></div><div class="hidden md:flex items-center gap-space-xs bg-surface-container-high/40 px-space-sm py-1 rounded-lg"><span class="material-symbols-outlined text-[16px] text-secondary">shield_with_heart</span><span class="font-label-sm text-label-sm text-on-surface-variant">IbnSina 1.5B آماده پاسخ‌گویی</span></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary-container ring-2 ring-surface"></span></button><div class="h-6 w-[1px] bg-surface-container-highest"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-left"><span class="font-title-sm text-title-sm text-on-surface text-right">امیررضا علوی</span><span class="font-label-sm text-label-sm text-on-surface-variant text-right">اکانت متصل: Pro</span></div><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXo1co9k26VN-VowBprgdLIwtvwCODEC9nIGLHrz8mLem8tcpPyQrJH8eX0VSWAVAXXCiW4fu5upr5ZEHTZIH7Y-s3bY5Hz_SRAkBuFRmrS_2JomMuREd0AEo4b7o8hIfm_xjFF3MZ6ywHuHzBfdMbLCGQpkLu5okp5UTs67Tr-5Q-WhHFJ9_XeG92TVXCjf6u_eBojIKqD4p-WJIol2qmgRrX8wLX8LlhzXn8_Umn2wXdgxH2d-fc"/><span class="absolute bottom-0 left-0 h-2.5 w-2.5 rounded-full bg-tertiary ring-2 ring-surface"></span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-8"><div class="flex flex-col w-full">
-<div class="py-space-md flex flex-col gap-space-md">
-<!-- Top Model Switcher & Account Synchronization Deck -->
-<div class="bg-surface-container/70 backdrop-blur-xl rounded-xl p-space-md shadow-md flex flex-col lg:flex-row items-center justify-between gap-space-md">
-<!-- Model Pills Carousel -->
-<div class="flex items-center gap-space-xs overflow-x-auto w-full lg:w-auto pb-1 lg:pb-0 scrollbar-none" id="model-selector-bar">
-<button class="model-tab flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-primary text-on-primary shadow-sm transition-all text-start whitespace-nowrap" data-model="chatgpt" type="button">
-<span class="material-symbols-outlined text-[18px]">psychology</span>
-<div class="flex flex-col">
-<span class="font-title-sm text-title-sm">ChatGPT-4o</span>
-<span class="font-label-sm text-label-sm opacity-80">OpenAI Plus</span>
-</div>
-<span class="h-2 w-2 rounded-full bg-tertiary mr-1"></span>
-</button>
-<button class="model-tab flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface transition-all text-start whitespace-nowrap" data-model="deepseek" type="button">
-<span class="material-symbols-outlined text-[18px]">neurology</span>
-<div class="flex flex-col">
-<span class="font-title-sm text-title-sm">DeepSeek R1</span>
-<span class="font-label-sm text-label-sm opacity-80">استدلال عمیق</span>
-</div>
-</button>
-<button class="model-tab flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface transition-all text-start whitespace-nowrap" data-model="gemini" type="button">
-<span class="material-symbols-outlined text-[18px]">spark</span>
-<div class="flex flex-col">
-<span class="font-title-sm text-title-sm">Gemini 1.5 Pro</span>
-<span class="font-label-sm text-label-sm opacity-80">Google Workspace</span>
-</div>
-</button>
-<button class="model-tab flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface transition-all text-start whitespace-nowrap" data-model="ibnsina" type="button">
-<span class="material-symbols-outlined text-[18px]">medical_services</span>
-<div class="flex flex-col">
-<span class="font-title-sm text-title-sm">ابن‌سینا ۱.۵B</span>
-<span class="font-label-sm text-label-sm opacity-80">پزشکی و بالینی بومی</span>
-</div>
-</button>
-</div>
-<!-- Account Connection & Sync Status Status Bar -->
-<div class="flex flex-wrap items-center gap-space-sm w-full lg:w-auto justify-end">
-<div class="flex items-center gap-space-xs px-space-sm py-1 rounded-lg bg-surface-container-lowest text-on-surface">
-<span class="relative flex h-2 w-2">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
-<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
-</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">متصل به اکانت رسمی:</span>
-<span class="font-label-sm text-label-sm text-tertiary font-bold" id="current-account-badge">amir.developer@gmail.com</span>
-</div>
-<button class="flex items-center gap-1.5 px-space-sm py-1 rounded-lg bg-surface-container-high/80 hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors shadow-sm" id="sync-cloud-toggle" type="button">
-<span class="material-symbols-outlined text-[16px] text-secondary">cloud_sync</span>
-<span class="font-label-sm text-label-sm">همگام‌سازی تاریخچه با جیمیل: فعال</span>
-</button>
-</div>
-</div>
-<!-- Workspace Main Split Grid: Chats History Stream + Live Dialogue Canvas -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
-<!-- Right/Inner Sidebar: Synchronized Provider History Panel (4 Cols on lg) -->
-<div class="lg:col-span-4 flex flex-col gap-space-sm bg-surface-container-low/70 backdrop-blur-xl p-space-md rounded-xl shadow-md h-[calc(100vh-210px)] min-h-[580px] overflow-hidden">
-<!-- Search & Filter Chats -->
-<div class="relative w-full">
-<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant text-[18px]">search</span>
-<input class="w-full bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded-lg pr-9 pl-3 py-2 outline-none focus:bg-surface-container transition-all placeholder:text-outline" id="history-search" placeholder="جستجو در سابقه گفتگوهای جیمیل..." type="text"/>
-</div>
-<!-- Sync Meta Info Chip -->
-<div class="flex items-center justify-between px-space-xs py-1 text-on-surface-variant">
-<span class="font-label-sm text-label-sm flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-tertiary">sync</span>
-            آخرین واکشی: ۲ دقیقه پیش
-          </span>
-<span class="font-label-sm text-label-sm text-outline">۴۲ گفتگوی ابری</span>
-</div>
-<!-- History Sessions List Scroll Area -->
-<div class="flex flex-col gap-space-sm overflow-y-auto pr-1 flex-1 scrollbar-none" id="history-container">
-<!-- Section: Today -->
-<div class="flex flex-col gap-space-xs">
-<span class="font-label-sm text-label-sm text-on-surface-variant font-bold px-space-xs pt-1">امروز</span>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container text-on-surface cursor-pointer shadow-sm hover:bg-surface-container-high transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-primary shrink-0">chat_bubble</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">تحلیل داده‌های پایتون و رگرسیون</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">ChatGPT-4o • ۱۰:۴۵</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface cursor-pointer transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-secondary shrink-0">data_object</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">طراحی معماری میکروسرویس ایونت‌محور</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">DeepSeek-R1 • ۰۹:۱۵</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-</div>
-<!-- Section: Yesterday -->
-<div class="flex flex-col gap-space-xs pt-space-xs">
-<span class="font-label-sm text-label-sm text-on-surface-variant font-bold px-space-xs">دیروز</span>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface cursor-pointer transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-tertiary shrink-0">clinical_notes</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">خلاصه پرونده بالینی و فارماکوکینتیک</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">ابن‌سینا ۱.۵B • ۲۲:۳۰</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface cursor-pointer transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-primary shrink-0">terminal</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">بررسی کد قرارداد هوشمند سولیدیتی</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">DeepSeek-R1 • ۱۸:۱۰</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-</div>
-<!-- Section: Previous 7 Days -->
-<div class="flex flex-col gap-space-xs pt-space-xs">
-<span class="font-label-sm text-label-sm text-on-surface-variant font-bold px-space-xs">۷ روز گذشته</span>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface cursor-pointer transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-secondary shrink-0">translate</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">ترجمه و ویرایش مقاله پژوهشی یادگیری تقویتی</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Gemini 1.5 Pro • ۳ روز پیش</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-<div class="group flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface cursor-pointer transition-all">
-<div class="flex items-center gap-space-xs min-w-0">
-<span class="material-symbols-outlined text-[18px] text-tertiary shrink-0">biotech</span>
-<div class="flex flex-col min-w-0">
-<span class="font-title-sm text-title-sm truncate">تداخلات دارویی داروهای ضد انعقاد</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">ابن‌سینا ۱.۵B • ۴ روز پیش</span>
-</div>
-</div>
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">chevron_left</span>
-</div>
-</div>
-</div>
-<!-- Sidebar Footer Action -->
-<div class="pt-space-xs">
-<button class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary transition-all font-title-sm text-title-sm" type="button">
-<span class="material-symbols-outlined text-[18px]">add</span>
-<span>گفتگوی ابری تازه</span>
-</button>
-</div>
-</div>
-<!-- Main Live Chat Space: Conversation Bubbles + Dynamic Interactive Composer (8 Cols on lg) -->
-<div class="lg:col-span-8 flex flex-col justify-between bg-surface-container-low/60 backdrop-blur-xl rounded-xl p-space-md shadow-lg h-[calc(100vh-210px)] min-h-[580px]">
-<!-- Live Dialogue Messages Scroll Container -->
-<div class="flex flex-col gap-space-md overflow-y-auto px-space-xs scrollbar-none flex-1 pb-space-md" id="chat-messages-scroll">
-<!-- Notice: Synced Direct Gmail Session -->
-<div class="self-center flex items-center gap-2 px-space-md py-1.5 rounded-full bg-surface-container-high/90 text-on-surface-variant shadow-sm text-center">
-<span class="material-symbols-outlined text-[16px] text-tertiary">lock</span>
-<span class="font-label-sm text-label-sm">اتصال امن با روش رسمی provider؛ کلید مخفی در مرورگر قرار نمی‌گیرد.</span>
-</div>
-<!-- User Message Bubble -->
-<div class="flex items-start gap-space-sm flex-row-reverse self-end max-w-[85%]">
-<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-title-sm text-title-sm shrink-0 shadow-sm">
-              AR
+      <main class="main-shell">
+        <header class="topbar">
+          <div class="topbar-left"><button class="icon-button mobile-only" id="menuButton">☰</button><div><p class="breadcrumb" data-i18n="breadcrumb">ALUNA / Workspace</p><h1 id="pageTitle" data-i18n="chat">Chat</h1></div></div>
+          <div class="topbar-actions"><button class="language-pill" id="languageButton">FA <span>↔</span> EN</button><button class="icon-button" id="quickTheme" aria-label="Theme">◐</button><button class="new-button" id="newConversation"><span>＋</span><b data-i18n="newConversation">New chat</b></button></div>
+        </header>
+
+        <div class="content-wrap">
+          <section class="page active" id="page-chat">
+            <div class="page-intro chat-intro"><div><span class="kicker" data-i18n="commandCenter">COMMAND CENTER</span><h2 data-i18n="chatHeadline">All your AI, in one calm place.</h2><p data-i18n="chatSubheadline">Switch between models without losing your thread. ALUNA keeps your workspace focused and your conversations beautifully organized.</p></div><div class="intro-orb"><span>✦</span><small>ALUNA<br />CORE</small></div></div>
+            <div class="chat-grid">
+              <aside class="conversation-rail surface"><div class="rail-head"><div><span class="kicker" data-i18n="yourThreads">YOUR THREADS</span><strong id="threadCount">0 conversations</strong></div><button class="round-button" id="railNew">＋</button></div><div class="rail-search"><span>⌕</span><input id="conversationSearch" data-i18n-placeholder="searchThreads" placeholder="Search threads" /></div><div class="thread-list" id="threadList"></div></aside>
+              <section class="chat-card surface"><div class="chat-card-head"><div class="model-switcher" id="modelSwitcher"></div><div class="connected-label" id="connectedLabel"><span class="status-dot"></span><span data-i18n="ready">Ready</span></div></div><div class="message-stream" id="messageStream"></div><div class="composer-wrap"><div class="composer"><textarea id="messageInput" rows="1" data-i18n-placeholder="messagePlaceholder" placeholder="Ask anything..."></textarea><button class="send-button" id="sendButton" aria-label="Send">↗</button></div><div class="composer-foot"><span data-i18n="officialRoute">Messages route through the provider's official API.</span><span class="mono">SHIFT + ENTER</span></div></div></section>
             </div>
-<div class="flex flex-col items-end gap-1">
-<div class="flex items-center gap-2">
-<span class="font-label-sm text-label-sm text-on-surface-variant">۱۰:۴۲ ق.ظ</span>
-<span class="font-title-sm text-title-sm text-on-surface font-bold">امیررضا</span>
-</div>
-<div class="bg-primary/20 text-on-surface p-space-md rounded-2xl rounded-tr-none shadow-sm leading-relaxed font-body-md text-body-md text-right">
-                سلام! لطفاً تفاوت مکانیزم Attention در Transformer را با الگوریتم‌های سنتی پردازش زبان طبیعی مقایسه کن و یک قطعه کد نمونه پایتون برای محاسبه Self-Attention با استفاده از NumPy بنویس.
-              </div>
-<div class="flex items-center gap-space-xs opacity-80 hover:opacity-100 transition-opacity">
-<button class="text-on-surface-variant hover:text-on-surface p-1" title="ویرایش" type="button"><span class="material-symbols-outlined text-[16px]">edit</span></button>
-<button class="text-on-surface-variant hover:text-on-surface p-1" title="کپی" type="button"><span class="material-symbols-outlined text-[16px]">content_copy</span></button>
-</div>
-</div>
-</div>
-<!-- AI Model Response Bubble -->
-<div class="flex items-start gap-space-sm self-start max-w-[95%]">
-<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-title-sm text-title-sm shrink-0 shadow-sm">
-<span class="material-symbols-outlined text-[18px]">neurology</span>
-</div>
-<div class="flex flex-col items-start gap-space-xs w-full">
-<!-- Header with Model Specs & Metrics -->
-<div class="flex items-center gap-space-sm flex-wrap">
-<span class="font-title-sm text-title-sm text-on-surface font-bold" id="active-model-title">DeepSeek-R1 (حالت استدلال تحلیلی)</span>
-<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-tertiary">تولید: ۴۲ tok/s</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">تاخیر: ۲۸۰ms</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">۱۰:۴۳ ق.ظ</span>
-</div>
-<!-- Collapsible Thought/Reasoning Process -->
-<details class="w-full bg-surface-container-high/40 rounded-lg overflow-hidden group mb-1">
-<summary class="flex items-center justify-between px-space-sm py-2 cursor-pointer select-none text-on-surface-variant hover:text-on-surface transition-colors">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px] text-secondary">psychology_alt</span>
-<span class="font-title-sm text-title-sm">فرآیند تفکر و استدلال مدل (Chain of Thought - ۱,۲۴۰ توکن)</span>
-</div>
-<span class="material-symbols-outlined text-[18px] transition-transform group-open:rotate-180">expand_more</span>
-</summary>
-<div class="p-space-sm text-on-surface-variant font-label-md text-label-md leading-loose bg-surface-container-lowest/60 text-right">
-                  کاربر درخواست مقایسه مکانیزم Self-Attention با متدهای سنتی مثل RNN و LSTM و پیاده‌سازی فرمول سافت‌مکس برای کیو، کی و وی در NumPy دارد.<br/>
-                  ۱. تحلیل ضعف‌های بازگشتی (Gradient Vanishing و عدم امکان پردازش موازی).<br/>
-                  ۲. توضیح فرمولاسیون ماتریسی Scaled Dot-Product Attention: $Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})V$.<br/>
-                  ۳. نوشتن اسکریپت بهینه پایتون بدون لایبرری‌های حجیم.
-                </div>
-</details>
-<!-- Markdown & Text Content -->
-<div class="bg-surface-container p-space-md rounded-2xl rounded-tl-none shadow-sm flex flex-col gap-space-sm text-on-surface w-full">
-<p class="font-body-md text-body-md leading-relaxed text-right">
-                  در معماری‌های سنتی NLP مانند RNN و LSTM، ورودی‌ها به صورت گام‌به‌گام و ترتیبی (Sequential) پردازش می‌شدند که دو ایراد عمده داشت: اولاً مانع از موازی‌سازی فرآیند آموزش روی پردازنده‌های گرافیکی (GPU) می‌شد، و ثانیاً در توالی‌های طولانی داده، «فراموشی ارتباطات دوردست» رخ می‌داد.
-                </p>
-<p class="font-body-md text-body-md leading-relaxed text-right">
-                  مکانیزم <strong>Self-Attention</strong> اجازه می‌دهد تا مدل به تمامی توکن‌های جمله به صورت همزمان نگاه انداخته و میزان اهمیت و ارتباط معنایی هر کلمه را نسبت به سایر کلمات با ماتریس‌های Q (پرسش)، K (کلید) و V (ارزش) وزن‌دهی کند.
-                </p>
-<!-- Code Block with Copy Action -->
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden mt-2 shadow-inner">
-<div class="flex items-center justify-between px-space-sm py-1.5 bg-surface-container-high/80 text-on-surface-variant">
-<span class="font-label-sm text-label-sm">python (NumPy Self-Attention)</span>
-<button class="flex items-center gap-1 hover:text-on-surface text-on-surface-variant transition-colors" data-code="import numpy as np
+          </section>
 
-def scaled_dot_product_attention(Q, K, V):
-    d_k = Q.shape[-1]
-    scores = np.matmul(Q, K.T) / np.sqrt(d_k)
-    attention_weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
-    output = np.matmul(attention_weights, V)
-    return output, attention_weights" onclick="navigator.clipboard.writeText(this.dataset.code)" type="button">
-<span class="material-symbols-outlined text-[16px]">content_copy</span>
-<span class="font-label-sm text-label-sm">کپی کد</span>
-</button>
-</div>
-<pre class="p-space-sm overflow-x-auto text-left font-label-md text-label-md text-secondary" dir="ltr"><code>import numpy as np
+          <section class="page" id="page-connections">
+            <div class="page-intro"><div><span class="kicker" data-i18n="connectionsKicker">YOUR CONNECTIONS</span><h2 data-i18n="connectionsHeadline">Bring your models into ALUNA.</h2><p data-i18n="connectionsSubheadline">Connect with an official provider API. Your account email labels the connection; ALUNA never asks for your provider password.</p></div><div class="connection-lock">⌁ <span data-i18n="serverEncrypted">Server-side encrypted</span></div></div>
+            <div class="notice-card"><div class="notice-icon">i</div><div><strong data-i18n="providerTruthTitle">A clear line between account and API</strong><p data-i18n="providerTruth">Logging into a consumer AI website with Gmail does not give another website access to its private web history. To make chat genuinely work, use the provider's official API key here. ALUNA then stores its own real history in D1.</p></div></div>
+            <div class="provider-grid" id="providerGrid"></div>
+          </section>
 
-def scaled_dot_product_attention(Q, K, V):
-    d_k = Q.shape[-1]
-    scores = np.matmul(Q, K.T) / np.sqrt(d_k)
-    # Softmax normalization across last dimension
-    attention_weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
-    output = np.matmul(attention_weights, V)
-    return output, attention_weights
+          <section class="page" id="page-settings">
+            <div class="page-intro"><div><span class="kicker" data-i18n="settingsKicker">YOUR SPACE</span><h2 data-i18n="settingsHeadline">Make ALUNA feel like yours.</h2><p data-i18n="settingsSubheadline">Every detail is saved to your workspace and follows you across sessions.</p></div></div>
+            <div class="settings-layout"><div class="settings-column"><article class="settings-card surface"><div class="card-heading"><div><span class="kicker" data-i18n="lookAndFeel">LOOK &amp; FEEL</span><h3 data-i18n="themes">Themes</h3></div><span class="heading-mark">◌</span></div><div class="theme-grid"><button class="theme-tile aurora selected" data-theme="aurora"><span class="theme-preview">✦</span><b data-i18n="auroraTheme">Aurora</b><small data-i18n="auroraThemeSub">Quiet premium</small></button><button class="theme-tile cat" data-theme="cat"><span class="theme-preview">🐈</span><b data-i18n="catTheme">Cat club</b><small data-i18n="catThemeSub">Soft &amp; playful</small></button><button class="theme-tile cyber" data-theme="cyber"><span class="theme-preview">⌁</span><b data-i18n="cyberTheme">Cyber neon</b><small data-i18n="cyberThemeSub">Electric future</small></button><button class="theme-tile retro" data-theme="retro"><span class="theme-preview">✺</span><b data-i18n="retroTheme">90s signal</b><small data-i18n="retroThemeSub">Digital nostalgia</small></button></div></article><article class="settings-card surface"><div class="card-heading"><div><span class="kicker" data-i18n="accentKicker">ACCENT</span><h3 data-i18n="accentColor">Accent color</h3></div></div><div class="accent-row"><button data-accent="#8b5cf6" class="accent selected" style="--accent:#8b5cf6"></button><button data-accent="#17c5b3" class="accent" style="--accent:#17c5b3"></button><button data-accent="#ff6b8a" class="accent" style="--accent:#ff6b8a"></button><button data-accent="#5792ff" class="accent" style="--accent:#5792ff"></button><span data-i18n="accentHint">Applied across the workspace</span></div></article></div><div class="settings-column"><article class="settings-card surface"><div class="card-heading"><div><span class="kicker" data-i18n="preferencesKicker">PREFERENCES</span><h3 data-i18n="preferences">Preferences</h3></div></div><div class="preference-row"><div><b data-i18n="language">Interface language</b><small data-i18n="languageSub">Persian or English</small></div><div class="segmented" id="languageSwitch"><button data-lang="fa">FA</button><button data-lang="en">EN</button></div></div><div class="preference-row"><div><b data-i18n="saveHistory">Save ALUNA history</b><small data-i18n="saveHistorySub">Persist conversations in D1</small></div><span class="live-chip"><i></i><span data-i18n="alwaysOn">Always on</span></span></div></article><article class="settings-card surface danger-card"><div class="card-heading"><div><span class="kicker" data-i18n="dataKicker">DATA</span><h3 data-i18n="dataControl">Workspace control</h3></div></div><p data-i18n="dataControlText">Disconnecting a provider removes its encrypted credential from ALUNA. Your saved ALUNA conversations stay available until you delete them.</p><button class="outline-button" id="refreshState" data-i18n="refreshData">Refresh workspace data</button></article></div></div>
+          </section>
 
-# تست خروجی با ابعاد ساختگی:
-Q = np.random.rand(4, 64)
-K = np.random.rand(4, 64)
-V = np.random.rand(4, 64)
-out, weights = scaled_dot_product_attention(Q, K, V)
-print("Shape of Context Output:", out.shape)</code></pre>
-</div>
-</div>
-<!-- Message Interactive Tooling Bar -->
-<div class="flex items-center gap-space-xs pt-1">
-<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">replay</span>
-<span>تولید مجدد</span>
-</button>
-<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">swap_horiz</span>
-<span>پاسخ با مدل دیگر</span>
-</button>
-<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">thumb_up</span>
-</button>
-<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high/50 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">thumb_down</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Interactive Fast Prompt Suggestions Chips -->
-<div class="flex items-center gap-space-xs overflow-x-auto py-space-xs scrollbar-none">
-<button class="prompt-chip px-space-sm py-1 rounded-full bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-colors flex items-center gap-1" type="button">
-<span class="material-symbols-outlined text-[14px] text-primary">lightbulb</span>
-            تحلیل پیچیدگی زمانی Big-O برای این متد
-          </button>
-<button class="prompt-chip px-space-sm py-1 rounded-full bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-colors flex items-center gap-1" type="button">
-<span class="material-symbols-outlined text-[14px] text-secondary">code_blocks</span>
-            تبدیل این کد به ماژول PyTorch
-          </button>
-<button class="prompt-chip px-space-sm py-1 rounded-full bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-colors flex items-center gap-1" type="button">
-<span class="material-symbols-outlined text-[14px] text-tertiary">format_list_bulleted</span>
-            خلاصه‌سازی در ۳ نکته کلیدی
-          </button>
-</div>
-<!-- Main Omnipotent Chat Input Composer -->
-<div class="bg-surface-container/90 backdrop-blur-2xl rounded-2xl p-space-sm shadow-xl flex flex-col gap-space-xs">
-<!-- Textarea Composer -->
-<textarea class="w-full bg-transparent text-on-surface placeholder:text-outline resize-none outline-none font-body-md text-body-md px-space-xs leading-relaxed" id="prompt-input" placeholder="پیام خود را بنویسید یا سؤالی بپرسید..." rows="2"></textarea>
-<!-- Input Action Strip -->
-<div class="flex flex-wrap items-center justify-between gap-space-xs pt-space-2xs">
-<!-- Tools: Web Search, Upload, Microphone -->
-<div class="flex items-center gap-space-xs">
-<button class="flex items-center gap-1 px-space-sm py-1 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" id="web-search-toggle" type="button">
-<span class="material-symbols-outlined text-[18px]">travel_explore</span>
-<span class="font-label-sm text-label-sm">وب‌سرچ فعال</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="پیوست سند یا تصویر" type="button">
-<span class="material-symbols-outlined text-[20px]">attach_file</span>
-</button>
-<button class="p-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="ورودی صوتی فارسی" type="button">
-<span class="material-symbols-outlined text-[20px]">mic</span>
-</button>
-<div class="hidden sm:flex items-center gap-1 px-space-xs text-on-surface-variant">
-<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
-<span class="font-label-sm text-label-sm">سهمیه جیمیل: ۸۴٪ باقی‌مانده</span>
-</div>
-</div>
-<!-- Dispatch Button with Primary Gradient & Glow -->
-<div class="flex items-center gap-space-xs">
-<button class="h-10 px-space-md bg-gradient-to-r from-primary-container to-inverse-primary text-on-primary font-title-sm text-title-sm rounded-xl flex items-center gap-2 shadow-lg hover:shadow-primary/30 active:scale-95 transition-all" id="send-button" type="button">
-<span>ارسال</span>
-<span class="material-symbols-outlined text-[18px] rotate-180">send</span>
-</button>
-</div>
-</div>
-<!-- Quota / Context Tracker Bar -->
-<div class="flex items-center justify-between px-space-xs pt-1 text-on-surface-variant">
-<span class="font-label-sm text-label-sm">وضعیت سهمیه: <strong class="text-on-surface">طبق provider</strong></span>
-<span class="font-label-sm text-label-sm">کدگذاری امن نشست بدون افشای رمز عبور</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main></div><script src="assets/app.js"></script></body></html>
+          <section class="page" id="page-info">
+            <div class="info-hero"><div><span class="kicker">ALUNA / THE IDEA</span><h2 data-i18n="infoHeadline">A more intentional way to use AI.</h2><p data-i18n="infoSubheadline">ALUNA is built for people who use more than one model, but want one clear place to think, create, and move forward.</p></div><div class="info-symbol">A<span>✦</span></div></div>
+            <div class="info-grid"><article class="creator-card"><div class="creator-badge">AR</div><span class="kicker" data-i18n="theMaker">THE MAKER</span><h3>ALIRAHIMI</h3><p data-i18n="creatorBio">ALIRAHIMI is a product-minded creator who believes powerful tools should feel calm, human, and beautifully made. ALUNA is his answer to a noisy AI landscape: a focused command center where every model has a place, every thread has a memory, and every interaction feels considered.</p><div class="creator-signature">ALIRAHIMI <span>✦</span></div></article><div class="feature-stack"><article class="feature-line"><span>01</span><div><b data-i18n="featureOneTitle">One workspace</b><p data-i18n="featureOneText">Chat with three official provider APIs from one premium interface.</p></div></article><article class="feature-line"><span>02</span><div><b data-i18n="featureTwoTitle">Real persistence</b><p data-i18n="featureTwoText">Your ALUNA threads and messages are stored in Cloudflare D1, not a demo array.</p></div></article><article class="feature-line"><span>03</span><div><b data-i18n="featureThreeTitle">Honest by design</b><p data-i18n="featureThreeText">The product explains what provider credentials can and cannot unlock.</p></div></article><article class="feature-line"><span>04</span><div><b data-i18n="featureFourTitle">Built for control</b><p data-i18n="featureFourText">Encrypted credentials, a clean architecture, and a path to verified user accounts.</p></div></article></div></div>
+            <footer class="info-footer"><span>ALUNA · 2025</span><span data-i18n="craftedBy">Crafted by ALIRAHIMI for a more focused tomorrow.</span></footer>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

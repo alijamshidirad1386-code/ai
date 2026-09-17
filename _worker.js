@@ -1,525 +1,251 @@
 const PROVIDERS = {
-  chatgpt: {
-    id: 'chatgpt',
-    name: 'ChatGPT / OpenAI',
-    kind: 'cloud',
-    secret: 'OPENAI_API_KEY',
-    modelEnv: 'OPENAI_MODEL',
-    defaultModel: 'gpt-5.6-luna'
-  },
-  deepseek: {
-    id: 'deepseek',
-    name: 'DeepSeek',
-    kind: 'cloud',
-    secret: 'DEEPSEEK_API_KEY',
-    modelEnv: 'DEEPSEEK_MODEL',
-    defaultModel: 'deepseek-chat'
-  },
-  gemini: {
-    id: 'gemini',
-    name: 'Google Gemini',
-    kind: 'cloud',
-    secret: 'GEMINI_API_KEY',
-    modelEnv: 'GEMINI_MODEL',
-    defaultModel: 'gemini-2.5-flash'
-  },
-  ibnsina: {
-    id: 'ibnsina',
-    name: 'IbnSina-1.5B',
-    kind: 'local',
-    modelEnv: 'IBNSINA_MODEL',
-    defaultModel: 'ibnsina-1.5b'
-  }
+  openai: { label: 'ChatGPT', model: 'gpt-4o-mini' },
+  deepseek: { label: 'DeepSeek', model: 'deepseek-chat' },
+  gemini: { label: 'Gemini', model: 'gemini-2.0-flash' }
 };
 
-const JSON_HEADERS = {
-  'content-type': 'application/json; charset=utf-8',
-  'cache-control': 'no-store'
-};
+const JSON_HEADERS = { 'content-type': 'application/json; charset=UTF-8' };
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
 
-function json(data, status = 200, extra = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...JSON_HEADERS, ...extra }
-  });
-}
-
-function corsHeaders(request) {
-  const origin = request.headers.get('Origin');
-  if (!origin) return {};
-  return {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-    'Vary': 'Origin'
-  };
-}
-
-function headersFor(request, extra = {}) {
-  return { ...corsHeaders(request), ...extra };
-}
-
-function newId(prefix = 'id') {
-  return `${prefix}_${crypto.randomUUID()}`;
-}
-
-function parseCookies(header = '') {
-  const out = {};
-  for (const part of header.split(';')) {
-    const i = part.indexOf('=');
-    if (i <= 0) continue;
-    const key = part.slice(0, i).trim();
-    const value = part.slice(i + 1).trim();
-    out[key] = decodeURIComponent(value);
+class HttpError extends Error {
+  constructor(status, message, code = 'request_error') {
+    super(message);
+    this.status = status;
+    this.code = code;
   }
-  return out;
 }
 
-function base64UrlEncode(bytes) {
+function json(data, status = 200, cookie) {
+  const headers = new Headers(JSON_HEADERS);
+  headers.set('cache-control', 'no-store');
+  if (cookie) headers.set('set-cookie', cookie);
+  return new Response(JSON.stringify(data), { status, headers });
+}
+
+function getCookie(request, name) {
+  const raw = request.headers.get('cookie') || '';
+  const found = raw.split(';').map((part) => part.trim()).find((part) => part.startsWith(`${name}=`));
+  return found ? decodeURIComponent(found.slice(name.length + 1)) : null;
+}
+
+async function getUser(request, env) {
+  const existing = getCookie(request, 'ALUNA_ID');
+  if (existing && /^[0-9a-f-]{36}$/i.test(existing)) return { id: existing, cookie: null };
+  const id = crypto.randomUUID();
+  await env.DB.prepare('INSERT INTO users (id) VALUES (?)').bind(id).run();
+  await env.DB.prepare('INSERT INTO settings (user_id) VALUES (?)').bind(id).run();
+  return { id, cookie: `ALUNA_ID=${encodeURIComponent(id)}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax` };
+}
+
+async function parseJson(request) {
+  try { return await request.json(); } catch { throw new HttpError(400, 'Invalid JSON body', 'invalid_json'); }
+}
+
+function requireProvider(value) {
+  if (!Object.hasOwn(PROVIDERS, value)) throw new HttpError(400, 'Unsupported provider', 'unsupported_provider');
+  return value;
+}
+
+function requireEmail(value) {
+  if (typeof value !== 'string' || !/^\S+@\S+\.\S+$/.test(value.trim())) throw new HttpError(400, 'A valid account email is required', 'invalid_email');
+  return value.trim().toLowerCase();
+}
+
+function requireApiKey(value) {
+  if (typeof value !== 'string' || value.trim().length < 8) throw new HttpError(400, 'An official provider API key is required', 'invalid_api_key');
+  return value.trim();
+}
+
+function toBase64(bytes) {
   let binary = '';
   for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  return btoa(binary);
 }
 
-function base64UrlDecode(value) {
-  const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((value.length + 3) % 4);
-  const binary = atob(padded);
-  return Uint8Array.from(binary, c => c.charCodeAt(0));
+function fromBase64(value) {
+  const binary = atob(value);
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-async function hmac(secret, value) {
-  const key = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value));
-  return base64UrlEncode(new Uint8Array(sig));
+async function cryptoKey(secret) {
+  if (!secret || secret.length < 32) throw new HttpError(500, 'APP_SECRET is missing or too short', 'server_secret_missing');
+  const digest = await crypto.subtle.digest('SHA-256', textEncoder.encode(secret));
+  return crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
 }
 
-async function setSessionCookie(env) {
-  const secret = env.OMNIAI_SESSION_SECRET || env.OMNIAI_ACCESS_PASSWORD;
-  if (!secret) return null;
-  const exp = Date.now() + 1000 * 60 * 60 * 24 * 30;
-  const payload = base64UrlEncode(new TextEncoder().encode(JSON.stringify({ uid: 'owner', exp })));
-  const sig = await hmac(secret, payload);
-  return [
-    `omniai_session=${payload}.${sig}`,
-    'Path=/',
-    'HttpOnly',
-    'Secure',
-    'SameSite=Lax',
-    `Max-Age=${60 * 60 * 24 * 30}`
-  ].join('; ');
+async function encrypt(value, secret) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await cryptoKey(secret);
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, textEncoder.encode(value));
+  return `${toBase64(iv)}.${toBase64(new Uint8Array(encrypted))}`;
 }
 
-async function isAuthed(request, env) {
-  if (!env.OMNIAI_ACCESS_PASSWORD) return true;
-  const cookies = parseCookies(request.headers.get('Cookie') || '');
-  const raw = cookies.omniai_session;
-  if (!raw) return false;
-  const split = raw.split('.');
-  if (split.length !== 2) return false;
-  const [payload, signature] = split;
-  const secret = env.OMNIAI_SESSION_SECRET || env.OMNIAI_ACCESS_PASSWORD;
-  const expected = await hmac(secret, payload);
-  if (signature !== expected) return false;
-  try {
-    const parsed = JSON.parse(new TextDecoder().decode(base64UrlDecode(payload)));
-    return Number(parsed.exp) > Date.now();
-  } catch {
-    return false;
-  }
+async function decrypt(value, secret) {
+  const [iv, payload] = value.split('.');
+  const key = await cryptoKey(secret);
+  const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromBase64(iv) }, key, fromBase64(payload));
+  return textDecoder.decode(decrypted);
 }
 
-async function requireAuth(request, env) {
-  if (await isAuthed(request, env)) return null;
-  return json(
-    { ok: false, error: 'unauthorized', message: 'وارد حساب OmniAI شوید.' },
-    401,
-    headersFor(request)
-  );
+async function requestWithTimeout(url, init, timeout = 20000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try { return await fetch(url, { ...init, signal: controller.signal }); }
+  catch (error) { throw new HttpError(502, `Provider request failed: ${error.name === 'AbortError' ? 'timeout' : error.message}`, 'provider_unreachable'); }
+  finally { clearTimeout(timer); }
 }
 
-async function ensureDatabase(env) {
-  if (!env.DB) return false;
-  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS conversations (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    provider_id TEXT NOT NULL,
-    model_id TEXT NOT NULL,
-    title TEXT NOT NULL,
-    source TEXT NOT NULL DEFAULT 'provider_api',
-    favorite INTEGER NOT NULL DEFAULT 0,
-    archived INTEGER NOT NULL DEFAULT 0,
-    created_at INTEGER NOT NULL,
-    updated_at INTEGER NOT NULL
-  )`).run();
-  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS messages (
-    id TEXT PRIMARY KEY,
-    conversation_id TEXT NOT NULL,
-    role TEXT NOT NULL,
-    content TEXT NOT NULL,
-    provider_id TEXT,
-    model_id TEXT,
-    status TEXT NOT NULL DEFAULT 'complete',
-    created_at INTEGER NOT NULL,
-    metadata TEXT
-  )`).run();
-  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS provider_accounts (
-    provider_id TEXT PRIMARY KEY,
-    account_email TEXT,
-    label TEXT,
-    updated_at INTEGER NOT NULL
-  )`).run();
-  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at)`).run();
-  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS idx_conversations_user ON conversations(user_id, updated_at)`).run();
-  return true;
+async function providerJson(response) {
+  const raw = await response.text();
+  let data;
+  try { data = JSON.parse(raw); } catch { data = { error: { message: raw.slice(0, 300) } }; }
+  if (!response.ok) throw new HttpError(502, data?.error?.message || data?.message || 'The provider rejected the request', 'provider_rejected');
+  return data;
 }
 
-async function listConversations(env) {
-  if (!env.DB) return [];
-  const rs = await env.DB.prepare(`
-    SELECT id, provider_id, model_id, title, source, favorite, archived, created_at, updated_at
-    FROM conversations
-    WHERE user_id='owner'
-    ORDER BY updated_at DESC
-    LIMIT 500
-  `).all();
-  return rs.results || [];
+async function verifyCredential(provider, apiKey) {
+  let response;
+  if (provider === 'openai') response = await requestWithTimeout('https://api.openai.com/v1/models', { headers: { authorization: `Bearer ${apiKey}` } }, 12000);
+  if (provider === 'deepseek') response = await requestWithTimeout('https://api.deepseek.com/models', { headers: { authorization: `Bearer ${apiKey}` } }, 12000);
+  if (provider === 'gemini') response = await requestWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`, {}, 12000);
+  await providerJson(response);
 }
 
-async function getConversation(env, id) {
-  if (!env.DB) return null;
-  const conversation = await env.DB.prepare(`
-    SELECT * FROM conversations WHERE id=? AND user_id='owner'
-  `).bind(id).first();
-  if (!conversation) return null;
-  const messages = await env.DB.prepare(`
-    SELECT id, role, content, provider_id, model_id, status, created_at, metadata
-    FROM messages WHERE conversation_id=? ORDER BY created_at ASC
-  `).bind(id).all();
-  conversation.messages = messages.results || [];
-  return conversation;
-}
-
-async function saveConversation(env, conversationId, providerId, modelId, title, messages, source = 'provider_api') {
-  if (!env.DB) return;
-  const now = Date.now();
-  const existing = await env.DB.prepare(`SELECT id FROM conversations WHERE id=? AND user_id='owner'`).bind(conversationId).first();
-  if (!existing) {
-    await env.DB.prepare(`
-      INSERT INTO conversations
-      (id,user_id,provider_id,model_id,title,source,created_at,updated_at)
-      VALUES (?,?,?,?,?,?,?,?)
-    `)
-      .bind(conversationId, 'owner', providerId, modelId, title, source, now, now)
-      .run();
-  } else {
-    await env.DB.prepare(`
-      UPDATE conversations
-      SET provider_id=?, model_id=?, title=?, updated_at=?
-      WHERE id=? AND user_id='owner'
-    `).bind(providerId, modelId, title, now, conversationId).run();
-  }
-
-  for (const message of messages) {
-    const messageId = message.id || newId('msg');
-    await env.DB.prepare(`
-      INSERT OR IGNORE INTO messages
-      (id,conversation_id,role,content,provider_id,model_id,status,created_at,metadata)
-      VALUES (?,?,?,?,?,?,?,?,?)
-    `).bind(
-      messageId,
-      conversationId,
-      message.role,
-      String(message.content || ''),
-      providerId,
-      modelId,
-      message.status || 'complete',
-      message.createdAt || now,
-      JSON.stringify(message.metadata || {})
-    ).run();
-  }
-}
-
-async function providerChat(providerId, model, messages, env) {
-  const provider = PROVIDERS[providerId];
-  if (!provider) throw new Error('unsupported_provider');
-  if (providerId === 'ibnsina') throw new Error('local_provider');
-
-  const apiKey = env[provider.secret];
-  if (!apiKey) throw new Error(`missing_secret:${provider.secret}`);
-
-  if (providerId === 'chatgpt') {
-    const input = messages.map(message => ({
-      role: message.role,
-      content: [{ type: 'input_text', text: message.content }]
-    }));
-    const response = await fetch('https://api.openai.com/v1/responses', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ model, input })
+async function callProvider(provider, apiKey, messages) {
+  const config = PROVIDERS[provider];
+  if (provider === 'gemini') {
+    const contents = messages.map((item) => ({ role: item.role === 'assistant' ? 'model' : 'user', parts: [{ text: item.content }] }));
+    const response = await requestWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ contents })
     });
-    const text = await response.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch {}
-    if (!response.ok) {
-      throw new Error(`openai:${data.error?.message || text.slice(0, 400)}`);
-    }
-    const outputText = typeof data.output_text === 'string'
-      ? data.output_text
-      : (data.output || []).flatMap(item => item.content || []).map(x => x.text || '').filter(Boolean).join('\n');
-    return { text: outputText, raw: data };
+    const data = await providerJson(response);
+    const output = data?.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('')?.trim();
+    if (!output) throw new HttpError(502, 'Gemini returned no text', 'empty_provider_response');
+    return output;
   }
-
-  if (providerId === 'deepseek') {
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ model, messages, stream: false })
-    });
-    const text = await response.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch {}
-    if (!response.ok) {
-      throw new Error(`deepseek:${data.error?.message || text.slice(0, 400)}`);
-    }
-    return { text: data.choices?.[0]?.message?.content || '', raw: data };
-  }
-
-  if (providerId === 'gemini') {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-    const system = messages.find(message => message.role === 'system');
-    const contents = messages
-      .filter(message => message.role !== 'system')
-      .map(message => ({
-        role: message.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: message.content }]
-      }));
-    const body = { contents };
-    if (system) body.systemInstruction = { parts: [{ text: system.content }] };
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    const text = await response.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch {}
-    if (!response.ok) {
-      throw new Error(`gemini:${data.error?.message || text.slice(0, 400)}`);
-    }
-    const outputText = data.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('') || '';
-    return { text: outputText, raw: data };
-  }
-
-  throw new Error('unsupported_provider');
+  const base = provider === 'openai' ? 'https://api.openai.com/v1/chat/completions' : 'https://api.deepseek.com/chat/completions';
+  const response = await requestWithTimeout(base, {
+    method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: config.model, messages: messages.map(({ role, content }) => ({ role, content })), temperature: 0.7 })
+  });
+  const data = await providerJson(response);
+  const output = data?.choices?.[0]?.message?.content?.trim();
+  if (!output) throw new HttpError(502, `${config.label} returned no text`, 'empty_provider_response');
+  return output;
 }
 
-async function providerStatus(env) {
-  const result = {};
-  for (const provider of Object.values(PROVIDERS)) {
-    result[provider.id] = {
-      id: provider.id,
-      name: provider.name,
-      kind: provider.kind,
-      configured: provider.kind === 'local' ? !!env.IBNSINA_URL : !!env[provider.secret],
-      model: env[provider.modelEnv] || provider.defaultModel,
-      connectionType: provider.kind === 'local' ? 'local_endpoint' : 'server_api_key'
-    };
-  }
-  return result;
+async function connectionFor(env, userId, provider) {
+  const row = await env.DB.prepare('SELECT encrypted_api_key FROM connections WHERE user_id = ? AND provider = ?').bind(userId, provider).first();
+  if (!row) throw new HttpError(409, `Connect ${PROVIDERS[provider].label} before chatting`, 'provider_not_connected');
+  return decrypt(row.encrypted_api_key, env.APP_SECRET);
+}
+
+async function stateResponse(env, user, responseData) {
+  return json(responseData, 200, user.cookie);
+}
+
+async function getState(env, user) {
+  const [connections, conversations, settings] = await Promise.all([
+    env.DB.prepare('SELECT provider, email, created_at, updated_at FROM connections WHERE user_id = ? ORDER BY provider').bind(user.id).all(),
+    env.DB.prepare('SELECT id, provider, title, created_at, updated_at FROM conversations WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100').bind(user.id).all(),
+    env.DB.prepare('SELECT language, theme, accent FROM settings WHERE user_id = ?').bind(user.id).first()
+  ]);
+  return { connections: connections.results, conversations: conversations.results, settings: settings || { language: 'fa', theme: 'aurora', accent: '#8b5cf6' } };
 }
 
 async function handleApi(request, env) {
   const url = new URL(request.url);
-  const path = url.pathname;
-  const method = request.method.toUpperCase();
+  const route = url.pathname.replace(/^\/api\/?/, '').split('/').filter(Boolean);
+  const user = await getUser(request, env);
 
-  if (method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: headersFor(request) });
+  if (route[0] === 'health') return stateResponse(env, user, { ok: true, service: 'ALUNA', time: new Date().toISOString() });
+  if (route[0] === 'state' && request.method === 'GET') return stateResponse(env, user, await getState(env, user));
+
+  if (route[0] === 'connections' && request.method === 'GET') {
+    const rows = await env.DB.prepare('SELECT provider, email, created_at, updated_at FROM connections WHERE user_id = ? ORDER BY provider').bind(user.id).all();
+    return stateResponse(env, user, { connections: rows.results });
+  }
+  if (route[0] === 'connections' && request.method === 'POST') {
+    const body = await parseJson(request);
+    const provider = requireProvider(body.provider);
+    const email = requireEmail(body.email);
+    const apiKey = requireApiKey(body.apiKey);
+    await verifyCredential(provider, apiKey);
+    const encrypted = await encrypt(apiKey, env.APP_SECRET);
+    await env.DB.prepare('INSERT INTO connections (user_id, provider, email, encrypted_api_key) VALUES (?, ?, ?, ?) ON CONFLICT(user_id, provider) DO UPDATE SET email = excluded.email, encrypted_api_key = excluded.encrypted_api_key, updated_at = CURRENT_TIMESTAMP').bind(user.id, provider, email, encrypted).run();
+    return stateResponse(env, user, { ok: true, provider, email });
+  }
+  if (route[0] === 'connections' && route[1] && request.method === 'DELETE') {
+    const provider = requireProvider(route[1]);
+    await env.DB.prepare('DELETE FROM connections WHERE user_id = ? AND provider = ?').bind(user.id, provider).run();
+    return stateResponse(env, user, { ok: true, provider });
   }
 
-  if (path === '/api/health') {
-    const hasDb = !!env.DB;
-    return json({
-      ok: true,
-      service: 'omniai',
-      runtime: 'cloudflare-worker',
-      databaseBound: hasDb,
-      providers: await providerStatus(env),
-      authConfigured: !!env.OMNIAI_ACCESS_PASSWORD,
-      timestamp: new Date().toISOString()
-    }, 200, headersFor(request));
+  if (route[0] === 'settings' && request.method === 'PATCH') {
+    const body = await parseJson(request);
+    const language = body.language === 'en' ? 'en' : 'fa';
+    const theme = ['aurora', 'cat', 'cyber', 'retro'].includes(body.theme) ? body.theme : 'aurora';
+    const accent = typeof body.accent === 'string' && /^#[0-9a-f]{6}$/i.test(body.accent) ? body.accent : '#8b5cf6';
+    await env.DB.prepare('INSERT INTO settings (user_id, language, theme, accent) VALUES (?, ?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET language = excluded.language, theme = excluded.theme, accent = excluded.accent, updated_at = CURRENT_TIMESTAMP').bind(user.id, language, theme, accent).run();
+    return stateResponse(env, user, { ok: true, settings: { language, theme, accent } });
   }
 
-  if (path === '/api/auth/status') {
-    return json({
-      ok: true,
-      authenticated: await isAuthed(request, env),
-      required: !!env.OMNIAI_ACCESS_PASSWORD
-    }, 200, headersFor(request));
+  if (route[0] === 'conversations' && !route[1] && request.method === 'GET') {
+    const provider = url.searchParams.get('provider');
+    const query = provider ? env.DB.prepare('SELECT id, provider, title, created_at, updated_at FROM conversations WHERE user_id = ? AND provider = ? ORDER BY updated_at DESC LIMIT 100').bind(user.id, requireProvider(provider)) : env.DB.prepare('SELECT id, provider, title, created_at, updated_at FROM conversations WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100').bind(user.id);
+    const rows = await query.all();
+    return stateResponse(env, user, { conversations: rows.results });
+  }
+  if (route[0] === 'conversations' && route[1] && request.method === 'GET') {
+    const conversation = await env.DB.prepare('SELECT id, provider, title, created_at, updated_at FROM conversations WHERE id = ? AND user_id = ?').bind(route[1], user.id).first();
+    if (!conversation) throw new HttpError(404, 'Conversation not found', 'conversation_not_found');
+    const rows = await env.DB.prepare('SELECT id, role, content, created_at FROM messages WHERE conversation_id = ? ORDER BY created_at ASC').bind(route[1]).all();
+    return stateResponse(env, user, { conversation, messages: rows.results });
+  }
+  if (route[0] === 'conversations' && request.method === 'POST') {
+    const body = await parseJson(request);
+    const provider = requireProvider(body.provider);
+    const id = crypto.randomUUID();
+    const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim().slice(0, 90) : 'New conversation';
+    await env.DB.prepare('INSERT INTO conversations (id, user_id, provider, title) VALUES (?, ?, ?, ?)').bind(id, user.id, provider, title).run();
+    return stateResponse(env, user, { conversation: { id, user_id: user.id, provider, title } });
   }
 
-  if (path === '/api/auth/login' && method === 'POST') {
-    if (!env.OMNIAI_ACCESS_PASSWORD) {
-      return json({ ok: true, authenticated: true, required: false }, 200, headersFor(request));
+  if (route[0] === 'chat' && request.method === 'POST') {
+    const body = await parseJson(request);
+    const provider = requireProvider(body.provider);
+    const message = typeof body.message === 'string' ? body.message.trim() : '';
+    if (!message || message.length > 12000) throw new HttpError(400, 'Message must be between 1 and 12000 characters', 'invalid_message');
+    const apiKey = await connectionFor(env, user.id, provider);
+    let conversationId = body.conversationId;
+    if (conversationId) {
+      const owned = await env.DB.prepare('SELECT id FROM conversations WHERE id = ? AND user_id = ? AND provider = ?').bind(conversationId, user.id, provider).first();
+      if (!owned) throw new HttpError(404, 'Conversation not found', 'conversation_not_found');
+    } else {
+      conversationId = crypto.randomUUID();
+      await env.DB.prepare('INSERT INTO conversations (id, user_id, provider, title) VALUES (?, ?, ?, ?)').bind(conversationId, user.id, provider, message.slice(0, 90)).run();
     }
-    const body = await request.json().catch(() => ({}));
-    if (body.password !== env.OMNIAI_ACCESS_PASSWORD) {
-      return json({ ok: false, error: 'invalid_credentials', message: 'رمز ورود نادرست است.' }, 401, headersFor(request));
-    }
-    const cookie = await setSessionCookie(env);
-    return json({ ok: true, authenticated: true }, 200, headersFor(request, { 'Set-Cookie': cookie }));
+    await env.DB.prepare('INSERT INTO messages (id, conversation_id, role, content) VALUES (?, ?, ?, ?)').bind(crypto.randomUUID(), conversationId, 'user', message).run();
+    const history = await env.DB.prepare('SELECT role, content FROM messages WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 40').bind(conversationId).all();
+    const output = await callProvider(provider, apiKey, history.results);
+    await env.DB.prepare('INSERT INTO messages (id, conversation_id, role, content) VALUES (?, ?, ?, ?)').bind(crypto.randomUUID(), conversationId, 'assistant', output).run();
+    await env.DB.prepare('UPDATE conversations SET updated_at = CURRENT_TIMESTAMP WHERE id = ?').bind(conversationId).run();
+    return stateResponse(env, user, { ok: true, conversationId, message: { role: 'assistant', content: output } });
   }
 
-  if (path === '/api/auth/logout' && method === 'POST') {
-    return json({ ok: true }, 200, headersFor(request, {
-      'Set-Cookie': 'omniai_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'
-    }));
-  }
-
-  const guard = await requireAuth(request, env);
-  if (guard) return guard;
-
-  if (env.DB) {
-    try {
-      await ensureDatabase(env);
-    } catch (error) {
-      return json({
-        ok: false,
-        error: 'database_error',
-        message: `اتصال D1 برقرار شد ولی schema قابل آماده‌سازی نیست: ${String(error?.message || error)}`
-      }, 500, headersFor(request));
-    }
-  }
-
-  if (path === '/api/providers' && method === 'GET') {
-    return json({ ok: true, providers: await providerStatus(env) }, 200, headersFor(request));
-  }
-
-  if (path === '/api/provider-accounts' && method === 'GET') {
-    if (!env.DB) return json({ ok: true, accounts: {} }, 200, headersFor(request));
-    const rows = await env.DB.prepare(`SELECT provider_id, account_email, label, updated_at FROM provider_accounts`).all();
-    const accounts = {};
-    for (const row of rows.results || []) accounts[row.provider_id] = row;
-    return json({ ok: true, accounts }, 200, headersFor(request));
-  }
-
-  if (path === '/api/provider-accounts' && method === 'POST') {
-    const body = await request.json().catch(() => ({}));
-    const providerId = String(body.providerId || '');
-    const email = String(body.email || '').trim();
-    const label = String(body.label || '').trim();
-    if (!PROVIDERS[providerId]) return json({ ok: false, error: 'provider_invalid' }, 400, headersFor(request));
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return json({ ok: false, error: 'email_invalid', message: 'ایمیل معتبر نیست.' }, 400, headersFor(request));
-    }
-    if (!env.DB) return json({ ok: false, error: 'database_not_configured' }, 503, headersFor(request));
-    await env.DB.prepare(`
-      INSERT INTO provider_accounts(provider_id, account_email, label, updated_at)
-      VALUES (?,?,?,?)
-      ON CONFLICT(provider_id) DO UPDATE SET
-        account_email=excluded.account_email,
-        label=excluded.label,
-        updated_at=excluded.updated_at
-    `).bind(providerId, email || null, label || null, Date.now()).run();
-    return json({ ok: true }, 200, headersFor(request));
-  }
-
-  if (path === '/api/conversations' && method === 'GET') {
-    return json({ ok: true, conversations: await listConversations(env) }, 200, headersFor(request));
-  }
-
-  if (path.startsWith('/api/conversations/') && method === 'GET') {
-    const id = decodeURIComponent(path.split('/').pop() || '');
-    const conversation = await getConversation(env, id);
-    if (!conversation) return json({ ok: false, error: 'not_found' }, 404, headersFor(request));
-    return json({ ok: true, conversation }, 200, headersFor(request));
-  }
-
-  if (path.startsWith('/api/conversations/') && method === 'DELETE') {
-    if (!env.DB) return json({ ok: false, error: 'database_not_configured' }, 503, headersFor(request));
-    const id = decodeURIComponent(path.split('/').pop() || '');
-    await env.DB.prepare(`DELETE FROM messages WHERE conversation_id=?`).bind(id).run();
-    await env.DB.prepare(`DELETE FROM conversations WHERE id=? AND user_id='owner'`).bind(id).run();
-    return json({ ok: true }, 200, headersFor(request));
-  }
-
-  if (path === '/api/chat' && method === 'POST') {
-    const body = await request.json().catch(() => ({}));
-    const providerId = String(body.providerId || '');
-    const provider = PROVIDERS[providerId];
-    const model = String(body.model || (provider ? (env[provider.modelEnv] || provider.defaultModel) : ''));
-    const userText = String(body.message || '').trim();
-    const conversationId = String(body.conversationId || newId('conv'));
-
-    if (!provider) return json({ ok: false, error: 'provider_invalid' }, 400, headersFor(request));
-    if (!userText) return json({ ok: false, error: 'message_empty' }, 400, headersFor(request));
-
-    if (providerId === 'ibnsina') {
-      return json({
-        ok: false,
-        error: 'local_provider',
-        message: 'IbnSina-1.5B در این نسخه باید از یک endpoint محلی/سازگار با OpenAI استفاده شود.'
-      }, 400, headersFor(request));
-    }
-
-    const prior = Array.isArray(body.history) ? body.history.slice(-30) : [];
-    const messages = [
-      ...prior
-        .filter(item => item && ['user', 'assistant', 'system'].includes(item.role))
-        .map(item => ({ role: item.role, content: String(item.content || '') }))
-        .filter(item => item.content),
-      { role: 'user', content: userText }
-    ];
-
-    try {
-      const result = await providerChat(providerId, model, messages, env);
-      const title = String(body.title || userText).slice(0, 80);
-      await saveConversation(env, conversationId, providerId, model, title, [
-        { id: newId('msg'), role: 'user', content: userText, createdAt: Date.now(), status: 'complete' },
-        { id: newId('msg'), role: 'assistant', content: result.text || '', createdAt: Date.now(), status: 'complete' }
-      ]);
-      return json({
-        ok: true,
-        conversationId,
-        providerId,
-        model,
-        text: result.text || ''
-      }, 200, headersFor(request));
-    } catch (error) {
-      const message = String(error?.message || error);
-      if (message.startsWith('missing_secret:')) {
-        return json({
-          ok: false,
-          error: 'provider_not_configured',
-          message: `کلید ${PROVIDERS[providerId].name} در Cloudflare تنظیم نشده است.`
-        }, 503, headersFor(request));
-      }
-      return json({ ok: false, error: 'provider_error', message }, 502, headersFor(request));
-    }
-  }
-
-  return json({ ok: false, error: 'not_found' }, 404, headersFor(request));
+  throw new HttpError(404, 'API route not found', 'not_found');
 }
 
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname.startsWith('/api/')) {
-      return handleApi(request, env);
+    try {
+      if (new URL(request.url).pathname.startsWith('/api/')) return await handleApi(request, env);
+      return env.ASSETS.fetch(request);
+    } catch (error) {
+      const status = error instanceof HttpError ? error.status : 500;
+      const message = error instanceof HttpError ? error.message : 'Unexpected server error';
+      return json({ ok: false, error: { code: error.code || 'server_error', message } }, status);
     }
-    return env.ASSETS.fetch(request);
   }
 };
